@@ -4,5 +4,6 @@ namespace API.Dtos.ReadDtos
     {
         public int Id { get; set; }
         public string Content { get; set; }
+        public string SubmittedAt { get; set; }
     }
 }

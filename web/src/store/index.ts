@@ -7,17 +7,20 @@ import expireReducer from 'redux-persist-expire'
 import authReducer from './auth/reducer'
 import relationshipsReducer from './relationships/reducer'
 import profileReducer from './profile/reducer'
+import postsReducer from './post/reducer'
 
 import signal from 'store/middlewares/signalRMiddleware'
 
 import { IAuthState } from './auth/initialState'
 import { IRelationshipsState } from './relationships/initialState'
 import { IProfileState } from './profile/initialState'
+import { IPostsState } from './post/initialState'
 
 export interface IState {
   auth: IAuthState
   profile: IProfileState
   relationships: IRelationshipsState
+  posts: IPostsState
 }
 
 export interface IAction<Payload> {
@@ -29,13 +32,14 @@ const reducer = combineReducers<IState>({
   auth: authReducer,
   profile: profileReducer,
   relationships: relationshipsReducer,
+  posts: postsReducer,
 })
 
 const persistedReducer = persistReducer(
   {
     key: 'root',
     storage,
-    blacklist: ['relationships', 'profile'],
+    blacklist: ['relationships', 'profile', 'post'],
     transforms: [
       // Token expires after 6 and a half days (By convention with the backend which is set to 7 days)
       expireReducer('auth', {

@@ -11,8 +11,8 @@ namespace API.Controllers
     [Route("api/[controller]")]
     public class PostController : ControllerBase
     {
-        private readonly PostService _postService;
-        public PostController(PostService postService)
+        private readonly IPostService _postService;
+        public PostController(IPostService postService)
         {
             _postService = postService;
         }

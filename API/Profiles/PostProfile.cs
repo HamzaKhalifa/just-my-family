@@ -10,7 +10,6 @@ namespace API.Profiles
         public PostProfile()
         {
             CreateMap<Post, PostReadDto>();
-            CreateMap<CreatePostCommand, Post>();
         }
     }
 }

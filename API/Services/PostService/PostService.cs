@@ -20,9 +20,12 @@ namespace API.Services.PostService
         public async Task<HttpResponse<Post>> CreatePost(CreatePostCommand command)
         {
             try {
-                Post post = _mapper.Map<Post>(command);
+                Post post = new Post {
+                    Content = command.Content,
+                    SubmittedAt = command.SubmittedAt,
+                };
 
-                await _postRepository.CreatePost(post);
+                await _postRepository.CreatePost(post, command.Pictures);
                 
                 return new HttpResponse<Post> {
                     Data = post,

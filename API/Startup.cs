@@ -5,6 +5,8 @@ using API.Models;
 using API.Repositories.Auth;
 using API.Repositories.FamilyRepository;
 using API.Repositories.MessageRepository;
+using API.Repositories.Pictures;
+using API.Repositories.Post;
 using API.Repositories.RelationshipRepository;
 using API.Repositories.RoomRepository;
 using API.Repositories.UserRepository;
@@ -117,6 +119,8 @@ namespace API
             
             services.AddTransient<IPostService, PostService>();
             services.AddTransient<IPostRepository, PostRepository>();
+            
+            services.AddTransient<IPictureRepository, PictureRepository>();
 
             services.AddTransient<IPictureService, PictureService>();
 

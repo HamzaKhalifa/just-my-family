@@ -27,9 +27,6 @@ export const getProfilePicture = () => (dispatch: Dispatch, getState: () => ISta
             process.env.REACT_APP_STATIC_FILES_URL + '/uploads/profilePictures/' + response.data.data
           )
         )
-        setProfilePicture(
-          process.env.REACT_APP_STATIC_FILES_URL + '/uploads/profilePictures/' + response.data.data
-        )
       }
     })
 }
