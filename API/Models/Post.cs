@@ -10,6 +10,7 @@ namespace API.Models
         public string SubmittedAt { get; set; }
         public User User { get; set; }
         public string UserId { get; set; }
+        public List<Comment> Comments { get; set; }
         public List<Reaction> Reactions { get; set; }
     }
 }

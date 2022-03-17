@@ -31,6 +31,7 @@ namespace API.Controllers
             HttpResponse<CommentReadDto> response = await _commentService.CreateComment(comment);
             switch(response.ResponseType) {
                 case ServiceResponse.Created: return StatusCode(201, response);
+                case ServiceResponse.Conflict: return Conflict(response);
                 default: return NotFound(response);
             }
         }

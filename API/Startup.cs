@@ -30,6 +30,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+
+
 namespace API
 {
     public class Startup
@@ -52,10 +54,9 @@ namespace API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
-
-            services.AddDbContext<DataContext>(options => {
-                options.UseSqlite(Configuration.GetConnectionString("Default"));
-            });
+            
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddIdentityCore<User>(
                 options => {
                     options.Password.RequiredUniqueChars = 0;

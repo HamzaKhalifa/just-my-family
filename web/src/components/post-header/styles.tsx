@@ -3,26 +3,22 @@ import { createUseStyles } from 'react-jss'
 import { ITheme } from 'theme'
 
 const useStyles = createUseStyles((theme: ITheme) => ({
-  postCardContainer: {
+  postHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+  },
+  posterNameAndTime: {
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: '20px',
-    paddingBottom: '20px',
-    backgroundColor: theme.frontColor,
-    borderRadius: '20px',
-    padding: '20px 10px',
-    boxShadow: '0px 5px 10px ' + theme.shadowColor,
-    width: '100%',
-    maxWidth: '700px',
-    minWidth: '300px',
-    margin: 'auto',
-    boxSizing: 'border-box',
+    marginLeft: '10px',
   },
-  postContent: {
-    marginTop: '10px',
-    paddingLeft: '60px',
+  posterName: {
+    color: theme.textColor1,
   },
-
+  postTime: {
+    color: theme.tertiaryFrontColor,
+  },
   // Comment creation
   createCommentModalContainer: {
     display: 'flex',
@@ -52,12 +48,6 @@ const useStyles = createUseStyles((theme: ITheme) => ({
     width: '30px',
     height: '30px',
     borderRadius: '50%',
-  },
-
-  // Comments section
-  commentsList: {
-    display: 'flex',
-    flexDirection: 'column',
   },
 }))
 

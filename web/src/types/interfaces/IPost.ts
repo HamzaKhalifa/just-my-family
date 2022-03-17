@@ -1,3 +1,4 @@
+import { IComment } from './IComment'
 import { IUser } from './IUser'
 
 export interface IPost {
@@ -7,4 +8,5 @@ export interface IPost {
   submittedAt: string
   userId?: string
   user: IUser
+  comments: IComment[]
 }

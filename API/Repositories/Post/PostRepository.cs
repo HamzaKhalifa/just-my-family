@@ -25,7 +25,11 @@ namespace API.Repositories.Post
                 select relationship.User2Id).Concat(from relationship in _context.Relationships
                 where relationship.User2Id == requesterId  
                 select relationship.User1Id).Contains(post.UserId)
-                select post).Include(p => p.User).OrderByDescending(p => p.Id).Skip((page - 1) * amount).Take(amount).ToListAsync();
+                select post)
+                    .Include(p => p.Comments.OrderByDescending(c => c.Id).Take(10))
+                    .Include("Comments.User")
+                    .Include(p => p.User)
+                    .OrderByDescending(p => p.Id).Skip((page - 1) * amount).Take(amount).ToListAsync();
             
             return posts;
         }
