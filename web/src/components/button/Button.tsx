@@ -13,7 +13,6 @@ interface IButton {
   filled?: boolean
   style?: CSS.Properties
   loading?: boolean
-  className?: string
   textStyle?: CSS.Properties
 }
 
@@ -35,12 +34,14 @@ const Button = (props: IButton) => {
         <props.PrefixIcon color={props.filled ? theme.frontColor : theme.primaryColor} size={25} />
       )}
 
-      <h2
-        style={{ ...(props.textStyle || {}) }}
-        className={styles[props.filled ? 'buttonTitleFilled' : 'buttonTitle']}
-      >
-        {props.text} {props.loading && '...'}
-      </h2>
+      {props.text && (
+        <h2
+          style={{ ...(props.textStyle || {}) }}
+          className={styles[props.filled ? 'buttonTitleFilled' : 'buttonTitle']}
+        >
+          {props.text} {props.loading && '...'}
+        </h2>
+      )}
     </button>
   )
 }

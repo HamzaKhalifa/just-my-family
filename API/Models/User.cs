@@ -14,5 +14,6 @@ namespace API.Models
         public string ProfilePictureName { get; set; }
         public GenderEnum Gender { get; set; }
         public List<SeenByUserMessage> SeenMessages { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Dtos.Commands.Posts;
+using API.Dtos.ReadDtos;
 using API.HttpHelpers;
 using API.Models;
 
@@ -7,6 +9,8 @@ namespace API.Services.PostService
 {
     public interface IPostService
     {
-        Task<HttpResponse<Post>> CreatePost(CreatePostCommand command);
+        Task<HttpResponse<List<PostReadDto>>> GetFeedPosts(int page, int amount);
+        Task<HttpResponse<List<PostReadDto>>> GetUserPosts(GetPostsCommand command);
+        Task<HttpResponse<PostReadDto>> CreatePost(CreatePostCommand command);
     }
 }

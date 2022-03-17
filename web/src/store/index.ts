@@ -39,7 +39,7 @@ const persistedReducer = persistReducer(
   {
     key: 'root',
     storage,
-    blacklist: ['relationships', 'profile', 'post'],
+    blacklist: ['relationships', 'profile', 'posts'],
     transforms: [
       // Token expires after 6 and a half days (By convention with the backend which is set to 7 days)
       expireReducer('auth', {

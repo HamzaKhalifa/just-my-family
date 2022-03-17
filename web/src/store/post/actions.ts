@@ -3,23 +3,56 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 
-import { SET_POSTS } from './actionTypes'
+import { SET_FEED_POSTS, ADD_FEED_POST } from './actionTypes'
 
 import { IState } from 'store'
 import { IHttpResponse } from 'types/interfaces/IHttpResponse'
 import { IErrorResponse } from 'types/interfaces/IErrorResponse'
 import { IPostState } from './initialState'
+import { IPost } from 'types/interfaces/IPost'
 
-export const setPosts = (posts: IPostState[]) => ({
-  type: SET_POSTS,
-  payload: posts,
+export const setFeedPosts = (feedPosts: IPostState[]) => ({
+  type: SET_FEED_POSTS,
+  payload: feedPosts,
 })
+
+export const addFeedPost = (post: IPostState) => ({ type: ADD_FEED_POST, payload: post })
+
+export const getFeedPosts =
+  (page: number, amount: number) => (dispatch: Dispatch, getState: () => IState) => {
+    const token: string | undefined = getState().auth.token
+
+    axios
+      .request({
+        method: 'GET',
+        url: process.env.REACT_APP_API + '/post/getFeedPosts/' + page + '/' + amount,
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then((response: IHttpResponse<IPost[]>) => {
+        if (response.data.data && Array.isArray(response.data.data)) {
+          dispatch(
+            setFeedPosts(
+              response.data.data.map((post) => ({
+                post,
+                loading: false,
+              }))
+            )
+          )
+        }
+      })
+      .catch((e: IErrorResponse<any>) => {
+        e.response.data.messages.forEach((m) => toast.error(m))
+      })
+      .finally(() => {})
+  }
 
 export const createPost =
   (content: string, pictures: string[]) => (dispatch: Dispatch, getState: () => IState) => {
     const token: string | undefined = getState().auth.token
 
-    const toasterId = toast.info('Posting...', { isLoading: true })
+    const toasterId = toast.loading('Posting...')
 
     axios
       .request({
@@ -34,14 +67,22 @@ export const createPost =
           pictures,
         },
       })
-      .then((response: IHttpResponse<string>) => {
-        if (response.data.data) {
+      .then((response: IHttpResponse<IPost>) => {
+        console.log('response.data.data', response.data.data)
+        if (response.data.success) {
+          dispatch(
+            addFeedPost({
+              loading: false,
+              post: response.data.data,
+            })
+          )
         }
       })
       .catch((e: IErrorResponse<any>) => {
         e.response.data.messages.forEach((m) => toast.error(m))
       })
       .finally(() => {
+        console.log('what')
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
       })
   }

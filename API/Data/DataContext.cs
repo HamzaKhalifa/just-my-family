@@ -17,6 +17,8 @@ namespace API.Data
         public DbSet<SeenByUserMessage> SeenByUsersMessages { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
         public DataContext(DbContextOptions options) : base(options)
         {
         }

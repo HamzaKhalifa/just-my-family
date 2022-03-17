@@ -3,46 +3,20 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220316230735_AddedUserToPost")]
+    partial class AddedUserToPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
-
-            modelBuilder.Entity("API.Models.Comment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("SubmittedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comments");
-                });
 
             modelBuilder.Entity("API.Models.Family", b =>
                 {
@@ -169,44 +143,6 @@ namespace API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("API.Models.Reaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CommentId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("CommentId1")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentId1");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reactions");
                 });
 
             modelBuilder.Entity("API.Models.Room", b =>
@@ -386,22 +322,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "74f21533-d808-44f8-bfb6-3716f615b443",
-                            ConcurrencyStamp = "4319b7c4-ade5-48e3-bfd6-d0c9dec39601",
+                            Id = "30366f29-766a-4198-87f1-25d6cfa3555e",
+                            ConcurrencyStamp = "7ffbc02b-8cf6-4948-87fc-2a41eddc1770",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "1110392f-df75-428c-ac41-3fcc7f6f2a1f",
-                            ConcurrencyStamp = "81f10641-2c1f-4269-a7aa-c7d9f4b10ebe",
+                            Id = "33e12e5e-c314-4ca1-a691-8d8753799dbd",
+                            ConcurrencyStamp = "ba70f87f-82e9-4aec-801c-a7f97f6cdeb9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4810d41d-0c7c-449d-a0bb-8171c2c91d71",
-                            ConcurrencyStamp = "f07c5cf6-497a-484f-ac35-d172ad34a7c3",
+                            Id = "c1c05f22-6564-4b4b-b5b7-33fed64e0ad2",
+                            ConcurrencyStamp = "85ee9750-15aa-4c1b-adc4-314c364874d5",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -540,15 +476,6 @@ namespace API.Migrations
                     b.HasDiscriminator().HasValue("Relationship");
                 });
 
-            modelBuilder.Entity("API.Models.Comment", b =>
-                {
-                    b.HasOne("API.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("API.Models.Message", b =>
                 {
                     b.HasOne("API.Models.Room", "Room")
@@ -601,29 +528,6 @@ namespace API.Migrations
                     b.HasOne("API.Models.User", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("API.Models.Reaction", b =>
-                {
-                    b.HasOne("API.Models.Comment", "Comment")
-                        .WithMany("Reactions")
-                        .HasForeignKey("CommentId1");
-
-                    b.HasOne("API.Models.Post", "Post")
-                        .WithMany("Reactions")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Post");
 
                     b.Navigation("User");
                 });
@@ -745,11 +649,6 @@ namespace API.Migrations
                     b.Navigation("User2");
                 });
 
-            modelBuilder.Entity("API.Models.Comment", b =>
-                {
-                    b.Navigation("Reactions");
-                });
-
             modelBuilder.Entity("API.Models.Family", b =>
                 {
                     b.Navigation("Users");
@@ -763,8 +662,6 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.Post", b =>
                 {
                     b.Navigation("Pictures");
-
-                    b.Navigation("Reactions");
                 });
 
             modelBuilder.Entity("API.Models.Room", b =>

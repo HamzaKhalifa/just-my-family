@@ -6,12 +6,12 @@ export interface IPostState {
 }
 
 export interface IPostsState {
-  posts: IPostState[]
+  feedPosts: IPostState[]
   submitLoading: boolean
 }
 
 const initialState: IPostsState = {
-  posts: [],
+  feedPosts: [],
   submitLoading: false,
 }
 

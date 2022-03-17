@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace API.Dtos.ReadDtos
 {
     public class UserReadDto
@@ -7,6 +9,7 @@ namespace API.Dtos.ReadDtos
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfilePictureName { get; set; }
+        public List<PostReadDto> Posts { get; set; }
         
     }
 }

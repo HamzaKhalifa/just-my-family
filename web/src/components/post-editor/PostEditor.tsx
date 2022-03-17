@@ -32,10 +32,11 @@ const PostEditor = (props: IPostEditor) => {
     e.preventDefault()
 
     const content: string | undefined = sunEditor?.getContents(true)
-    console.log('content', content)
     if (!content || content.trim() === '<p><br></p>') return toast.error("Content shouldn't be empty")
 
     dispatch(createPost(content, pictures))
+    setPostModalOpen(false)
+    sunEditor?.setContents('')
   }
 
   // Autofocus prop is not working. So we manually focus the editor when the modal shows
