@@ -307,6 +307,7 @@ export const setRelationshipInvitationSeen =
         },
       })
       .then((response: IHttpResponse<number>) => {
+        console.log('unseen invitations count', response.data.data)
         dispatch(setUnseenInvitationsCount(response.data.data))
       })
   }

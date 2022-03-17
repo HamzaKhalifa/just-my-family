@@ -95,7 +95,9 @@ namespace API.Repositories.RelationshipRepository
                 });
             });
 
-            return await _dataContext.SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
+
+            return await GetUnseenInvitationsCount(userId);
         }
     }
 }

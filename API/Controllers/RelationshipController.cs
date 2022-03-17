@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Dtos.Commands.RelationshipCommands;
@@ -99,12 +100,15 @@ namespace API.Controllers
         [Authorize]
         [HttpPost("setRelationshipInvitationSeen")]
         public async Task<ActionResult<HttpResponse<int>>> SetRelationshipInvitationSeen(SetRelationshipInvitationSeenCommand command) {
-            HttpResponse<int> response = await _relationshipService.SetRelationshipInvitationSeen(command);
-            HttpResponse<int> unseenInvitationsCountResponse = await _relationshipService.GetUnseenInvitationsCount();
-            
-            switch (unseenInvitationsCountResponse.ResponseType) {
-                case ServiceResponse.Ok: return Ok(unseenInvitationsCountResponse);
-                default: return NotFound(unseenInvitationsCountResponse);
+            try {
+                HttpResponse<int> unseenInvitationsCountResponse = await _relationshipService.SetRelationshipInvitationSeen(command);
+                
+                switch (unseenInvitationsCountResponse.ResponseType) {
+                    case ServiceResponse.Ok: return Ok(unseenInvitationsCountResponse);
+                    default: return NotFound(unseenInvitationsCountResponse);
+                }
+            } catch(Exception e) {
+                throw e;
             }
         }
     }

@@ -30,8 +30,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-
-
 namespace API
 {
     public class Startup
