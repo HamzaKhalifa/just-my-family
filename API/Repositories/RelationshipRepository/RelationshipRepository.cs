@@ -82,7 +82,6 @@ namespace API.Repositories.RelationshipRepository
                 
                 return response;
             } catch(Exception e) { 
-                Console.WriteLine(e);
                 throw;
             }
         }
@@ -100,7 +99,7 @@ namespace API.Repositories.RelationshipRepository
 
                 return await GetUnseenInvitationsCount(userId);
             } catch(Exception e) {
-                throw e;
+                throw;
             }
         }
     }

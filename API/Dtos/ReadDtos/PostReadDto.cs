@@ -12,5 +12,6 @@ namespace API.Dtos.ReadDtos
         public string UserId { get; set; }
         public List<CommentReadDto> Comments { get; set; }
         public List<Reaction> Reactions { get; set; }
+        public int NumberOfComments { get; set; }
     }
 }

@@ -7,5 +7,6 @@ namespace API.Repositories.Post
     {
         Task<List<API.Models.Comment>> GetPostComments(int postId, string requesterId, int page, int amount);
         Task<API.Models.Comment> CreateComment(API.Models.Comment comment);
+        int GetPostNumberOfComments(int postId);
     }
 }

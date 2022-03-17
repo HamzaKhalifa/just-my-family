@@ -9,4 +9,5 @@ export interface IPost {
   userId?: string
   user: IUser
   comments: IComment[]
+  numberOfComments: number
 }

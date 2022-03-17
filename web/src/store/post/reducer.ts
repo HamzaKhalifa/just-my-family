@@ -50,6 +50,7 @@ const addFeedPostComment = (
             post: {
               ...post.post,
               comments: [...post.post?.comments, action.payload.comment],
+              numberOfComments: (post.post.numberOfComments || 0) + 1,
             },
           }
         : post

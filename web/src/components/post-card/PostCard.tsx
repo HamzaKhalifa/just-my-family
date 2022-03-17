@@ -28,6 +28,7 @@ interface IPostCard {
 const PostCard = (props: IPostCard) => {
   const [commentModalOpen, setCommentModalOpen] = React.useState<boolean>(false)
   const [sunEditor, setSunEditor] = React.useState<SunEditorCore | undefined>(undefined)
+  const [commentsHidden, setCommentsHidden] = React.useState<boolean>(false)
 
   const styles = useStyles()
   const dispatch = useDispatch()
@@ -45,7 +46,7 @@ const PostCard = (props: IPostCard) => {
     setCommentModalOpen(false)
     sunEditor?.setContents('')
   }
-  console.log('post', props.post?.post)
+  const handleLoadMoreComments = () => {}
 
   // Autofocus prop is not working. So we manually focus the editor when the modal shows
   React.useEffect(() => {
@@ -53,6 +54,10 @@ const PostCard = (props: IPostCard) => {
       sunEditor.core.focus()
     }
   }, [commentModalOpen, sunEditor])
+  // Choose to hide or show comments
+  React.useEffect(() => {
+    if (props.post.post.comments.length > 3) setCommentsHidden(true)
+  }, [props.post.post.comments.length])
 
   return (
     <div className={styles.postCardContainer}>
@@ -64,11 +69,25 @@ const PostCard = (props: IPostCard) => {
 
       <WriteCommentButton onClick={() => setCommentModalOpen(true)} />
 
-      <div className={styles.commentsList}>
-        {props.post.post?.comments.map((comment) => (
-          <CommentCard key={comment.id} comment={comment} />
-        ))}
-      </div>
+      {props.post.post.comments.length > 0 && (
+        <span onClick={() => setCommentsHidden(!commentsHidden)} className={styles.hideShowComments}>
+          {commentsHidden ? 'Show Comments' : 'Hide Comments'}
+        </span>
+      )}
+
+      {!commentsHidden && (
+        <div className={styles.commentsList}>
+          {props.post.post?.comments.map((comment) => (
+            <CommentCard key={comment.id} comment={comment} />
+          ))}
+        </div>
+      )}
+
+      {props.post.post.comments.length < props.post.post.numberOfComments && !commentsHidden && (
+        <span onClick={handleLoadMoreComments} className={styles.loadMoreComments}>
+          Load More Comments
+        </span>
+      )}
 
       <Modal onClose={() => setCommentModalOpen(false)} open={commentModalOpen}>
         <form onSubmit={handleSubmitComment} className={styles.createCommentModalContainer}>

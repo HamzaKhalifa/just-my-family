@@ -9,17 +9,20 @@ using API.Models;
 using API.Repositories.Post;
 using API.Services.UserService;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Services.PostService
 {
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public PostService(IPostRepository postRepository, IUserService userService, IMapper mapper)
+        public PostService(IPostRepository postRepository, ICommentRepository commentRepository, IUserService userService, IMapper mapper)
         {
             _postRepository = postRepository;
+            _commentRepository = commentRepository;
             _mapper = mapper;
             _userService = userService;
         }
@@ -28,9 +31,16 @@ namespace API.Services.PostService
             string requesterId = _userService.GetRequester();
             try {
                 List<Post> posts = await _postRepository.GetFeedPosts(requesterId, page, amount);
+
+                var postsReadDto = posts.Select(post => {
+                    PostReadDto postReadDto = _mapper.Map<PostReadDto>(post);
+                    postReadDto.NumberOfComments = _commentRepository.GetPostNumberOfComments(post.Id);
+
+                    return postReadDto;
+                }).ToList();
                 
                 return new HttpResponse<List<PostReadDto>> {
-                    Data = posts.Select(post => _mapper.Map<PostReadDto>(post)).ToList(),
+                    Data = postsReadDto,
                     Success = true,
                     ResponseType = ServiceResponse.Ok,
                     Messages = new string[] { "Posts" }

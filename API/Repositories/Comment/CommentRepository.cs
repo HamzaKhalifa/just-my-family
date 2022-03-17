@@ -26,5 +26,8 @@ namespace API.Repositories.Post
             await _context.SaveChangesAsync();
             return _context.Comments.Include(comment => comment.User).FirstOrDefault(c => c.Id == comment.Id);
         }
+        public int GetPostNumberOfComments(int postId) {
+            return _context.Comments.Where(c => c.PostId == postId).Count();
+        }
     }
 }

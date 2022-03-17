@@ -55,6 +55,18 @@ const useStyles = createUseStyles((theme: ITheme) => ({
   },
 
   // Comments section
+  hideShowComments: {
+    color: theme.secondaryColor,
+    margin: 'auto',
+    marginBottom: '10px',
+    cursor: 'pointer',
+  },
+  loadMoreComments: {
+    color: theme.secondaryColor,
+    margin: 'auto',
+    marginBottom: '10px',
+    cursor: 'pointer',
+  },
   commentsList: {
     display: 'flex',
     flexDirection: 'column',

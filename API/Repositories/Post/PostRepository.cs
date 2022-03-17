@@ -5,6 +5,7 @@ using API.Data;
 using API.Dtos.Commands.Posts;
 using API.Models;
 using API.Repositories.Pictures;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.Post
@@ -13,23 +14,30 @@ namespace API.Repositories.Post
     {
         private readonly DataContext _context;
         private readonly IPictureRepository _pictureRepository;
-        public PostRepository(DataContext context, IPictureRepository pictureRepository)
+        private readonly IMapper _mapper;
+        public PostRepository(DataContext context, IPictureRepository pictureRepository, IMapper mapper)
         {
             _context = context;
             _pictureRepository = pictureRepository;
+            _mapper = mapper;
         }
         public async Task<List<API.Models.Post>> GetFeedPosts(string requesterId, int page, int amount) {
-            List<API.Models.Post> posts = await (from post in _context.Posts where post.UserId == requesterId || 
-                (from relationship in _context.Relationships
-                where relationship.User1Id == requesterId  
-                select relationship.User2Id).Concat(from relationship in _context.Relationships
-                where relationship.User2Id == requesterId  
-                select relationship.User1Id).Contains(post.UserId)
-                select post)
-                    .Include(p => p.Comments.OrderByDescending(c => c.Id).Take(10))
-                    .Include("Comments.User")
-                    .Include(p => p.User)
-                    .OrderByDescending(p => p.Id).Skip((page - 1) * amount).Take(amount).ToListAsync();
+            List<API.Models.Post> posts = await (from post in _context.Posts 
+                where 
+                    post.UserId == requesterId 
+                    || 
+                    (from relationship in _context.Relationships
+                    where relationship.User1Id == requesterId  
+                    select relationship.User2Id).Concat(from relationship in _context.Relationships
+                    where relationship.User2Id == requesterId
+                    select relationship.User1Id).Contains(post.UserId)
+                select post
+            )
+                .Include(p => p.Comments.OrderBy(c => c.Id).Take(10))
+                .Include("Comments.User")
+                .Include(p => p.User)
+                .OrderByDescending(p => p.Id).Skip((page - 1) * amount).Take(amount)
+                .ToListAsync();
             
             return posts;
         }
