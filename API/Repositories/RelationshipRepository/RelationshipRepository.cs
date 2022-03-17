@@ -87,17 +87,21 @@ namespace API.Repositories.RelationshipRepository
             }
         }
         public async Task<int> SetRelationshipInvitationSeen(List<int> relationshipsIds, string userId) {
-            relationshipsIds.ForEach(async relationshipId => {
-                List<Relationship> relationships = await _dataContext.Relationships.Where(r => r.Id == relationshipId).ToListAsync();
-                relationships.ForEach(relationship => {
-                    if (!relationship.Seen)
-                        relationship.Seen = true;
+            try {
+                relationshipsIds.ForEach(relationshipId => {
+                    List<Relationship> relationships = _dataContext.Relationships.Where(r => r.Id == relationshipId).ToList();
+                    relationships.ForEach(relationship => {
+                        if (!relationship.Seen)
+                            relationship.Seen = true;
+                    });
                 });
-            });
 
-            await _dataContext.SaveChangesAsync();
+                await _dataContext.SaveChangesAsync();
 
-            return await GetUnseenInvitationsCount(userId);
+                return await GetUnseenInvitationsCount(userId);
+            } catch(Exception e) {
+                throw e;
+            }
         }
     }
 }

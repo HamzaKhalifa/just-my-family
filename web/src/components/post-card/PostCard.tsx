@@ -11,6 +11,7 @@ import WriteCommentButton from 'components/write-comment-button'
 import Modal from 'components/modal'
 import Button from 'components/button'
 import PostHeader from 'components/post-header'
+import CommentCard from 'components/comment-card'
 
 import { ImCross } from 'react-icons/im'
 
@@ -44,6 +45,7 @@ const PostCard = (props: IPostCard) => {
     setCommentModalOpen(false)
     sunEditor?.setContents('')
   }
+  console.log('post', props.post?.post)
 
   // Autofocus prop is not working. So we manually focus the editor when the modal shows
   React.useEffect(() => {
@@ -62,7 +64,11 @@ const PostCard = (props: IPostCard) => {
 
       <WriteCommentButton onClick={() => setCommentModalOpen(true)} />
 
-      <div className={styles.commentsList}></div>
+      <div className={styles.commentsList}>
+        {props.post.post?.comments.map((comment) => (
+          <CommentCard key={comment.id} comment={comment} />
+        ))}
+      </div>
 
       <Modal onClose={() => setCommentModalOpen(false)} open={commentModalOpen}>
         <form onSubmit={handleSubmitComment} className={styles.createCommentModalContainer}>

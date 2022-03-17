@@ -15,18 +15,20 @@ const CommentCard = (props: ICommentCard) => {
 
   return (
     <div className={styles.commentCardContainer}>
-      <UserProfilePicture
-        size={SizeEnum.Small}
-        profilePictureName={props.comment?.user?.profilePictureName}
-      />
+      <div className={styles.commentHeader}>
+        <UserProfilePicture
+          size={SizeEnum.Small}
+          profilePictureName={props.comment?.user?.profilePictureName}
+        />
 
-      <div className={styles.posterNameAndTime}>
-        <span className={styles.posterName}>
-          {(props.comment?.user?.firstName || '-') + ' ' + (props.comment?.user?.lastName || '-')}
-        </span>
-        <span className={styles.postTime}>
-          {props.comment?.submittedAt.toString().slice(0, props.comment?.submittedAt.length - 5)}
-        </span>
+        <div className={styles.posterNameAndTime}>
+          <span className={styles.posterName}>
+            {(props.comment?.user?.firstName || '-') + ' ' + (props.comment?.user?.lastName || '-')}
+          </span>
+          <span className={styles.postTime}>
+            {props.comment?.submittedAt.toString().slice(0, props.comment?.submittedAt.length - 5)}
+          </span>
+        </div>
       </div>
 
       <p className={styles.commentContent} dangerouslySetInnerHTML={{ __html: props.comment?.content }}></p>

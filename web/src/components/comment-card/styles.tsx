@@ -5,8 +5,18 @@ import { ITheme } from 'theme'
 const useStyles = createUseStyles((theme: ITheme) => ({
   commentCardContainer: {
     display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: theme.secondaryFrontColor,
+    padding: '10px',
+    borderRadius: '10px',
+    marginBottom: '10px',
+  },
+  commentHeader: {
+    display: 'flex',
     flexDirection: 'row',
-    backgroundColor: theme.tertiaryFrontColor,
+    backgroundColor: theme.secondaryFrontColor,
+    padding: '10px',
+    borderRadius: '10px',
   },
   posterNameAndTime: {
     display: 'flex',
@@ -19,7 +29,9 @@ const useStyles = createUseStyles((theme: ITheme) => ({
   postTime: {
     color: theme.tertiaryFrontColor,
   },
-  commentContent: {},
+  commentContent: {
+    marginLeft: '70px',
+  },
 }))
 
 export default useStyles

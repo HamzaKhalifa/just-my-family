@@ -31,7 +31,7 @@ export const setFeedPostPostingCommentLoading = (postId: number, loading: boolea
 
 export const addFeedPostComment = (postId: number, comment: IComment) => ({
   type: ADD_FEED_POST_COMMENT,
-  payload: comment,
+  payload: { postId, comment },
 })
 
 export const getFeedPosts =
@@ -84,7 +84,6 @@ export const createPost =
         },
       })
       .then((response: IHttpResponse<IPost>) => {
-        console.log('response.data.data', response.data.data)
         if (response.data.success) {
           dispatch(
             addFeedPost({
@@ -127,6 +126,7 @@ export const createComment =
         },
       })
       .then((response: IHttpResponse<IComment>) => {
+        console.log('response')
         dispatch(addFeedPostComment(postId, response.data.data))
         toast.info('Comemnt posted')
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
