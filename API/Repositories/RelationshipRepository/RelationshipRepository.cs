@@ -81,7 +81,8 @@ namespace API.Repositories.RelationshipRepository
                 var response = await _dataContext.SaveChangesAsync();
                 
                 return response;
-            } catch(Exception e) { 
+            } catch(Exception e) {
+                Console.WriteLine(e.ToString());
                 throw;
             }
         }
@@ -99,6 +100,7 @@ namespace API.Repositories.RelationshipRepository
 
                 return await GetUnseenInvitationsCount(userId);
             } catch(Exception e) {
+                Console.WriteLine(e.ToString());
                 throw;
             }
         }

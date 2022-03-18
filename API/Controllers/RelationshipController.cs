@@ -108,7 +108,8 @@ namespace API.Controllers
                     default: return NotFound(unseenInvitationsCountResponse);
                 }
             } catch(Exception e) {
-                throw e;
+                Console.WriteLine(e.ToString());
+                throw;
             }
         }
     }

@@ -15,6 +15,8 @@ export const setProfilePicture = (profilePicture: string | undefined) => ({
 export const getProfilePicture = () => (dispatch: Dispatch, getState: () => IState) => {
   const parsedToken: IParsedToken | undefined = getState().auth.parsedToken
 
+  if (!parsedToken?.nameid) return
+
   axios
     .request({
       method: 'GET',

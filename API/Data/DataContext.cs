@@ -33,6 +33,7 @@ namespace API.Data
 
             builder.Entity<UserFamily>().HasKey(nameof(UserFamily.UserId), nameof(UserFamily.FamilyId));
             builder.Entity<Participant>().HasKey(nameof(Participant.UserId), nameof(Participant.RoomId));
+            builder.Entity<Reaction>().HasKey(nameof(Reaction.UserId), nameof(Reaction.PostId));
             builder.Entity<SeenByUserMessage>()
                 .HasKey(seenByUserMessage => new { seenByUserMessage.UserId, seenByUserMessage.MessageId });  
             builder.Entity<SeenByUserMessage>()

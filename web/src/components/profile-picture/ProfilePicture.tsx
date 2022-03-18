@@ -59,6 +59,9 @@ const ProfilePicture = () => {
     if (!Boolean(newProfilePicture)) return
 
     const toastId = toast.info('Uploading picture...')
+
+    if (!token) return
+
     axios
       .request({
         method: 'POST',

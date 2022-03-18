@@ -4,6 +4,7 @@ export interface IPostState {
   post: IPost
   loading: boolean
   moreCommentsLoading?: boolean
+  reactLoading?: boolean
 }
 
 export interface IPostsState {

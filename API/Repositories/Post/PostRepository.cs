@@ -35,6 +35,7 @@ namespace API.Repositories.Post
             )
                 .Include(p => p.Comments.OrderBy(c => c.Id).Take(10))
                 .Include("Comments.User")
+                .Include("Reactions")
                 .Include(p => p.User)
                 .OrderByDescending(p => p.Id).Skip((page - 1) * amount).Take(amount)
                 .ToListAsync();

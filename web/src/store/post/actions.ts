@@ -9,6 +9,8 @@ import {
   ADD_FEED_POST_COMMENT,
   SET_MORE_COMMENTS_LOADING,
   ADD_LOADED_POST_COMMENTS,
+  SET_POST_REACT_LOADING,
+  ADD_POST_REACTION,
 } from './actionTypes'
 
 import { IState } from 'store'
@@ -17,6 +19,9 @@ import { IErrorResponse } from 'types/interfaces/IErrorResponse'
 import { IPostState } from './initialState'
 import { IPost } from 'types/interfaces/IPost'
 import { IComment } from 'types/interfaces/IComment'
+import { ReactionEnum } from 'types/enumerations/ReactionEnum'
+import { IParsedToken } from 'types/interfaces/IParsedToken'
+import { IReaction } from 'types/interfaces/IReaction'
 
 export const setFeedPosts = (feedPosts: IPostState[]) => ({
   type: SET_FEED_POSTS,
@@ -41,6 +46,16 @@ export const setMoreCommentsLoading = (postId: number, loading: boolean) => ({
 export const addLoadedPostComments = (postId: number, comments: IComment[]) => ({
   type: ADD_LOADED_POST_COMMENTS,
   payload: { postId, comments },
+})
+
+export const setPostReactLoading = (postId: number, loading: boolean) => ({
+  type: SET_POST_REACT_LOADING,
+  payload: { postId, loading },
+})
+
+export const addPostReaction = (postId: number, reaction: IReaction) => ({
+  type: ADD_POST_REACTION,
+  payload: { postId, reaction },
 })
 
 export const getFeedPosts =
@@ -149,10 +164,6 @@ export const loadMoreComments =
 
     if (!postId && postId !== 0) return
 
-    console.log(
-      'getState().posts.feedPosts.find((p) => p?.post.id)?.post.comments',
-      getState().posts.feedPosts.find((p) => p?.post.id === postId)?.post.comments
-    )
     dispatch(setMoreCommentsLoading(postId, true))
 
     axios
@@ -174,4 +185,33 @@ export const loadMoreComments =
       })
       .catch((e) => {})
       .finally(() => dispatch(setMoreCommentsLoading(postId, false)))
+  }
+
+export const reactToPost =
+  (postId: number | undefined, type: ReactionEnum) => (dispatch: Dispatch, getState: () => IState) => {
+    const token: string | undefined = getState().auth.token
+    const parsedToken: IParsedToken | undefined = getState().auth.parsedToken
+
+    if ((!postId && postId !== 0) || !parsedToken) return
+
+    dispatch(setPostReactLoading(postId, true))
+
+    axios
+      .request({
+        method: 'POST',
+        url: process.env.REACT_APP_API + '/reaction/reactToPost',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        data: {
+          postId,
+          userId: parsedToken.nameid,
+          type,
+        },
+      })
+      .then((response: IHttpResponse<IReaction>) => {
+        dispatch(addPostReaction(postId, response.data.data))
+      })
+      .catch((e) => {})
+      .finally(() => dispatch(setPostReactLoading(postId, false)))
   }

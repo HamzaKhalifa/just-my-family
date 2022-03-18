@@ -15,7 +15,7 @@ const Core = (props: ICore) => {
 
   // Relationships' invitations notifications
   React.useEffect(() => {
-    dispatch(getUnseenInvitationsCount())
+    if (token) dispatch(getUnseenInvitationsCount())
   }, [token, dispatch])
 
   return (
