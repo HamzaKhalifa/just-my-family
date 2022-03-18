@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using API.Dtos.Commands.Posts;
+using API.Dtos.Commands.PostCommands;
 
 namespace API.Repositories.Post
 {

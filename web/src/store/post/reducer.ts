@@ -3,8 +3,9 @@ import { IComment } from 'types/interfaces/IComment'
 import {
   SET_FEED_POSTS,
   ADD_FEED_POST,
-  SET_FEED_POST_POSTING_COMMENT_LOADING,
   ADD_FEED_POST_COMMENT,
+  SET_MORE_COMMENTS_LOADING,
+  ADD_LOADED_POST_COMMENTS,
 } from './actionTypes'
 
 import initialState, { IPostsState, IPostState } from './initialState'
@@ -20,20 +21,6 @@ const addFeedPost = (state: IPostsState, action: IAction<IPostState>) => {
   return {
     ...state,
     feedPosts: [action.payload, ...state.feedPosts],
-  }
-}
-
-const setFeedPostPostingCommentLoading = (
-  state: IPostsState,
-  action: IAction<{ postId: number; loading: boolean }>
-) => {
-  return {
-    ...state,
-    feedPosts: state.feedPosts.map((post) => ({
-      ...post,
-      postingCommentLoading:
-        post.post?.id === action.payload.postId ? action.payload.loading : post.postingCommentLoading,
-    })),
   }
 }
 
@@ -58,11 +45,48 @@ const addFeedPostComment = (
   }
 }
 
+const setMoreCommentsLoading = (
+  state: IPostsState,
+  action: IAction<{ postId: number; loading: boolean }>
+) => {
+  return {
+    ...state,
+    feedPosts: state.feedPosts.map((post) => ({
+      ...post,
+      moreCommentsLoading:
+        post.post?.id === action.payload.postId ? action.payload.loading : post.moreCommentsLoading,
+    })),
+  }
+}
+
+const addLoadedPostComments = (
+  state: IPostsState,
+  action: IAction<{ postId: number; comments: IComment[] }>
+): IPostsState => {
+  console.log('comments', action.payload.comments)
+  return {
+    ...state,
+    feedPosts: state.feedPosts.map((post) => {
+      if (post.post.id === action.payload.postId) {
+        return {
+          ...post,
+          post: {
+            ...post.post,
+            comments: [...post.post.comments, ...action.payload.comments],
+          },
+        }
+      }
+      return post
+    }),
+  }
+}
+
 const actionHandler: any = {
   [SET_FEED_POSTS]: setFeedPosts,
   [ADD_FEED_POST]: addFeedPost,
-  [SET_FEED_POST_POSTING_COMMENT_LOADING]: setFeedPostPostingCommentLoading,
   [ADD_FEED_POST_COMMENT]: addFeedPostComment,
+  [SET_MORE_COMMENTS_LOADING]: setMoreCommentsLoading,
+  [ADD_LOADED_POST_COMMENTS]: addLoadedPostComments,
 }
 
 const reducer = (state: IPostsState = initialState, action: IAction<any>) => {

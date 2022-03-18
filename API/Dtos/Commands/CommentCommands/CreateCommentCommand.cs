@@ -1,4 +1,4 @@
-namespace API.Dtos.Commands.Posts
+namespace API.Dtos.Commands.CommentCommands
 {
     public class CreateCommentCommand
     {

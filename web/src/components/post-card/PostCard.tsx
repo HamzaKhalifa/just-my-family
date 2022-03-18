@@ -12,14 +12,16 @@ import Modal from 'components/modal'
 import Button from 'components/button'
 import PostHeader from 'components/post-header'
 import CommentCard from 'components/comment-card'
+import Loader from 'components/loader'
 
 import { ImCross } from 'react-icons/im'
 
-import { createComment } from 'store/post/actions'
+import { createComment, loadMoreComments } from 'store/post/actions'
 
 import useStyles from './styles'
 import { IPostState } from 'store/post/initialState'
 import { ITheme } from 'theme'
+import { truncateSync } from 'fs'
 
 interface IPostCard {
   post: IPostState
@@ -27,6 +29,7 @@ interface IPostCard {
 
 const PostCard = (props: IPostCard) => {
   const [commentModalOpen, setCommentModalOpen] = React.useState<boolean>(false)
+  const [alreadySetHiddenComments, setAlreadySetHiddenComments] = React.useState<boolean>(false)
   const [sunEditor, setSunEditor] = React.useState<SunEditorCore | undefined>(undefined)
   const [commentsHidden, setCommentsHidden] = React.useState<boolean>(false)
 
@@ -46,7 +49,9 @@ const PostCard = (props: IPostCard) => {
     setCommentModalOpen(false)
     sunEditor?.setContents('')
   }
-  const handleLoadMoreComments = () => {}
+  const handleLoadMoreComments = () => {
+    dispatch(loadMoreComments(props.post.post.id))
+  }
 
   // Autofocus prop is not working. So we manually focus the editor when the modal shows
   React.useEffect(() => {
@@ -56,7 +61,10 @@ const PostCard = (props: IPostCard) => {
   }, [commentModalOpen, sunEditor])
   // Choose to hide or show comments
   React.useEffect(() => {
-    if (props.post.post.comments.length > 3) setCommentsHidden(true)
+    if (props.post.post.comments.length > 3 && !alreadySetHiddenComments) {
+      setCommentsHidden(true)
+      setAlreadySetHiddenComments(true)
+    }
   }, [props.post.post.comments.length])
 
   return (
@@ -83,11 +91,21 @@ const PostCard = (props: IPostCard) => {
         </div>
       )}
 
-      {props.post.post.comments.length < props.post.post.numberOfComments && !commentsHidden && (
-        <span onClick={handleLoadMoreComments} className={styles.loadMoreComments}>
-          Load More Comments
+      {props.post.post.comments.length < props.post.post.numberOfComments &&
+        !commentsHidden &&
+        !props.post.moreCommentsLoading && (
+          <span onClick={handleLoadMoreComments} className={styles.loadMoreComments}>
+            Load More Comments
+          </span>
+        )}
+
+      {props.post.post.comments.length > 3 && !commentsHidden && (
+        <span onClick={() => setCommentsHidden(true)} className={styles.hideShowComments}>
+          Hide Comments
         </span>
       )}
+
+      {props.post.moreCommentsLoading && <Loader />}
 
       <Modal onClose={() => setCommentModalOpen(false)} open={commentModalOpen}>
         <form onSubmit={handleSubmitComment} className={styles.createCommentModalContainer}>

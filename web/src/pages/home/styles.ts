@@ -20,7 +20,6 @@ const useStyles = createUseStyles((theme: ITheme) => ({
     overflowX: 'visible',
     height: '100%',
     paddingBottom: '200px',
-    paddingRight: '20px',
     paddingLeft: '5px',
   },
 }))

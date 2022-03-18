@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using API.Models;
 
-namespace API.Dtos.Commands.Posts
+namespace API.Dtos.Commands.PostCommands
 {
     public class CreatePostCommand
     {

@@ -1,4 +1,4 @@
-using API.Dtos.Commands.Posts;
+using API.Dtos.Commands.PostCommands;
 using API.Dtos.ReadDtos;
 using API.Models;
 using AutoMapper;

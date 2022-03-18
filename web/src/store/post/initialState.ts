@@ -3,7 +3,7 @@ import { IPost } from 'types/interfaces/IPost'
 export interface IPostState {
   post: IPost
   loading: boolean
-  postingCommentLoading?: boolean
+  moreCommentsLoading?: boolean
 }
 
 export interface IPostsState {

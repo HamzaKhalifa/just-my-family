@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.Dtos.Commands.Posts;
+using API.Dtos.Commands.PostCommands;
 using API.Dtos.ReadDtos;
 using API.HttpHelpers;
 using API.Models;
@@ -34,7 +34,7 @@ namespace API.Services.PostService
 
                 var postsReadDto = posts.Select(post => {
                     PostReadDto postReadDto = _mapper.Map<PostReadDto>(post);
-                    postReadDto.NumberOfComments = _commentRepository.GetPostNumberOfComments(post.Id);
+                    postReadDto.NumberOfComments = _commentRepository.GetPostTotalComments(post.Id);
 
                     return postReadDto;
                 }).ToList();

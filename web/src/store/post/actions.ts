@@ -6,8 +6,9 @@ import moment from 'moment'
 import {
   SET_FEED_POSTS,
   ADD_FEED_POST,
-  SET_FEED_POST_POSTING_COMMENT_LOADING,
   ADD_FEED_POST_COMMENT,
+  SET_MORE_COMMENTS_LOADING,
+  ADD_LOADED_POST_COMMENTS,
 } from './actionTypes'
 
 import { IState } from 'store'
@@ -24,14 +25,22 @@ export const setFeedPosts = (feedPosts: IPostState[]) => ({
 
 export const addFeedPost = (post: IPostState) => ({ type: ADD_FEED_POST, payload: post })
 
-export const setFeedPostPostingCommentLoading = (postId: number, loading: boolean) => ({
-  type: SET_FEED_POST_POSTING_COMMENT_LOADING,
-  payload: { postId, loading },
-})
-
 export const addFeedPostComment = (postId: number, comment: IComment) => ({
   type: ADD_FEED_POST_COMMENT,
   payload: { postId, comment },
+})
+
+export const setMoreCommentsLoading = (postId: number, loading: boolean) => ({
+  type: SET_MORE_COMMENTS_LOADING,
+  payload: {
+    postId,
+    loading,
+  },
+})
+
+export const addLoadedPostComments = (postId: number, comments: IComment[]) => ({
+  type: ADD_LOADED_POST_COMMENTS,
+  payload: { postId, comments },
 })
 
 export const getFeedPosts =
@@ -97,7 +106,6 @@ export const createPost =
         e.response.data.messages.forEach((m) => toast.error(m))
       })
       .finally(() => {
-        console.log('what')
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
       })
   }
@@ -107,8 +115,6 @@ export const createComment =
     const token: string | undefined = getState().auth.token
 
     if (!postId || !token) return
-
-    dispatch(setFeedPostPostingCommentLoading(postId, true))
 
     const toasterId = toast.loading('Posting comment...')
 
@@ -126,7 +132,6 @@ export const createComment =
         },
       })
       .then((response: IHttpResponse<IComment>) => {
-        console.log('response')
         dispatch(addFeedPostComment(postId, response.data.data))
         toast.info('Comemnt posted')
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
@@ -135,7 +140,38 @@ export const createComment =
         error.response.data.messages.forEach((m) => toast.error(m))
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
       })
-      .finally(() => {
-        dispatch(setFeedPostPostingCommentLoading(postId, false))
+      .finally(() => {})
+  }
+
+export const loadMoreComments =
+  (postId: number | undefined) => (dispatch: Dispatch, getState: () => IState) => {
+    const token: string | undefined = getState().auth.token
+
+    if (!postId && postId !== 0) return
+
+    console.log(
+      'getState().posts.feedPosts.find((p) => p?.post.id)?.post.comments',
+      getState().posts.feedPosts.find((p) => p?.post.id === postId)?.post.comments
+    )
+    dispatch(setMoreCommentsLoading(postId, true))
+
+    axios
+      .request({
+        method: 'POST',
+        url: process.env.REACT_APP_API + '/comment/loadMoreComments',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+        data: {
+          postId,
+          amountAlreadyLoaded:
+            getState().posts.feedPosts.find((p) => p?.post.id === postId)?.post.comments.length || 0,
+          amountToLoad: 10,
+        },
       })
+      .then((response: IHttpResponse<IComment[]>) => {
+        dispatch(addLoadedPostComments(postId, response.data.data))
+      })
+      .catch((e) => {})
+      .finally(() => dispatch(setMoreCommentsLoading(postId, false)))
   }

@@ -39,7 +39,6 @@ namespace API.Controllers
                 default: return NotFound(response);
             }
         }
-
         [Authorize]
         [HttpPost("loadMoreMessages")]
         public async Task<ActionResult<HttpResponse<List<MessageReadDto>>>> LoadMoreMessages(LoadMoreMessagesCommand command) {

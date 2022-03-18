@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.Models;
 
 namespace API.Repositories.Post
 {
@@ -7,6 +8,7 @@ namespace API.Repositories.Post
     {
         Task<List<API.Models.Comment>> GetPostComments(int postId, string requesterId, int page, int amount);
         Task<API.Models.Comment> CreateComment(API.Models.Comment comment);
-        int GetPostNumberOfComments(int postId);
+        int GetPostTotalComments(int postId);
+        Task<List<Comment>> LoadMoreComments(int postId, int amountAlreadyLoaded, int amountToLoad);
     }
 }

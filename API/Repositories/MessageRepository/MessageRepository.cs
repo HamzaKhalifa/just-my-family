@@ -43,7 +43,6 @@ namespace API.Repositories.MessageRepository
 
             return await _dataContext.SaveChangesAsync();
         }
-        
         public async Task<List<Message>> LoadMoreMessages(int roomId, int amountAlreadyLoaded, int amountToLoad) {
             int totalMessages = await GetChatRoomTotalMessages(roomId);
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using API.Dtos.Commands.Posts;
+using API.Dtos.Commands.CommentCommands;
 using API.Dtos.ReadDtos;
 using API.HttpHelpers;
 using API.Models;
@@ -72,5 +72,16 @@ namespace API.Services.CommentService
                 };
             }
         } 
+        public async Task<HttpResponse<List<CommentReadDto>>> LoadMoreComments(LoadMoreCommentsCommand command) {
+            string userId = _userService.GetRequester();
+            List<Comment> comments = await _commentRepository.LoadMoreComments(command.PostId, command.AmountAlreadyLoaded, command.AmountToLoad);
+
+            return new HttpResponse<List<CommentReadDto>> {
+                Data = comments.Select(m => _mapper.Map<CommentReadDto>(m)).ToList(),
+                Success = true,
+                Messages = new string[] { "More comments loaded" },
+                ResponseType = ServiceResponse.Ok
+            };
+        }
     }
 }

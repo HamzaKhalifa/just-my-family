@@ -67,7 +67,6 @@ namespace API.Services.MessageService
                 ResponseType = ServiceResponse.Ok
             };
         }
-        
         public async Task<HttpResponse<List<MessageReadDto>>> LoadMoreMessages(LoadMoreMessagesCommand command) {
             string userId = _userService.GetRequester();
             List<Message> messages = await _messageRepository.LoadMoreMessages(command.RoomId, command.AmountAlreadyLoaded, command.AmountToLoad);
@@ -75,7 +74,7 @@ namespace API.Services.MessageService
             return new HttpResponse<List<MessageReadDto>> {
                 Data = messages.Select(m => _mapper.Map<MessageReadDto>(m)).ToList(),
                 Success = true,
-                Messages = new string[] { "Messages now seend by user " + userId },
+                Messages = new string[] { "More messages are loaded" },
                 ResponseType = ServiceResponse.Ok
             };
         }

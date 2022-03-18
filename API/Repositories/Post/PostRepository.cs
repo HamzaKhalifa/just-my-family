@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
-using API.Dtos.Commands.Posts;
+using API.Dtos.Commands.PostCommands;
 using API.Models;
 using API.Repositories.Pictures;
 using AutoMapper;
@@ -27,9 +27,9 @@ namespace API.Repositories.Post
                     post.UserId == requesterId 
                     || 
                     (from relationship in _context.Relationships
-                    where relationship.User1Id == requesterId  
+                    where relationship.User1Id == requesterId && relationship.Approved
                     select relationship.User2Id).Concat(from relationship in _context.Relationships
-                    where relationship.User2Id == requesterId
+                    where relationship.User2Id == requesterId && relationship.Approved
                     select relationship.User1Id).Contains(post.UserId)
                 select post
             )

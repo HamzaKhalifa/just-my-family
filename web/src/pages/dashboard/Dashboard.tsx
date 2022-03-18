@@ -31,7 +31,7 @@ const Dashboard = () => {
   return (
     <div className={styles.dashboardContainer}>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home key={Date.now()} />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/relationships" element={<Relationships key={Date.now()} />} />

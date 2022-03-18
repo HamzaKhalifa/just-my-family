@@ -16,6 +16,7 @@ const useStyles = createUseStyles((theme: ITheme) => ({
     maxWidth: '700px',
     minWidth: '300px',
     margin: 'auto',
+    marginTop: '0px',
     boxSizing: 'border-box',
   },
   postContent: {
