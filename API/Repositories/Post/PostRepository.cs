@@ -5,6 +5,7 @@ using API.Data;
 using API.Dtos.Commands.PostCommands;
 using API.Models;
 using API.Repositories.Pictures;
+using API.Repositories.UserRepository;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,12 +15,14 @@ namespace API.Repositories.Post
     {
         private readonly DataContext _context;
         private readonly IPictureRepository _pictureRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        public PostRepository(DataContext context, IPictureRepository pictureRepository, IMapper mapper)
+        public PostRepository(DataContext context, IPictureRepository pictureRepository, IMapper mapper, IUserRepository userRepository)
         {
             _context = context;
             _pictureRepository = pictureRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
         public async Task<List<API.Models.Post>> GetFeedPosts(string requesterId, int page, int amount) {
             List<API.Models.Post> posts = await (from post in _context.Posts 
@@ -57,6 +60,11 @@ namespace API.Repositories.Post
             });
             await _context.SaveChangesAsync();
             return _context.Posts.Include(post => post.User).FirstOrDefault(p => p.Id == post.Id);
+        }
+        public async Task<string> GetPostUserId(int postId) {
+            API.Models.Post post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+            return post.UserId;
         }
     }
 }

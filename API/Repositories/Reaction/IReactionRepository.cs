@@ -8,5 +8,6 @@ namespace API.Repositories.Post
     public interface IReactionRepository
     {
         Task<Reaction> ReactToPost(int postId, string requesterId, ReactionEnum type);
+        Task<int> DeleteReactionToPost(int postId, string requesterId);
     }
 }

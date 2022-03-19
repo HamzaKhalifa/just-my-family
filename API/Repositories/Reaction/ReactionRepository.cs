@@ -36,5 +36,13 @@ namespace API.Repositories.Post
 
             return reaction;
         }
+        public async Task<int> DeleteReactionToPost(int postId, string requesterId) {
+            Reaction reaction = await _dataContext.Reactions.FirstOrDefaultAsync(r => r.PostId == postId && r.UserId == requesterId);
+            _dataContext.Remove(reaction);
+
+            await _dataContext.SaveChangesAsync();
+
+            return reaction.Id;
+        }
     }
 }

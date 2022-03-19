@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using API.Dtos.Commands.PostCommands;
 using API.Dtos.ReadDtos;
 using API.HttpHelpers;
+using API.Hubs;
 using API.Models;
 using API.Repositories.Post;
+using API.Repositories.RelationshipRepository;
 using API.Services.UserService;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Services.PostService
 {
@@ -18,13 +20,22 @@ namespace API.Services.PostService
         private readonly IPostRepository _postRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IUserService _userService;
+        private readonly IRelationshipRepository _relationshipRepository;
         private readonly IMapper _mapper;
-        public PostService(IPostRepository postRepository, ICommentRepository commentRepository, IUserService userService, IMapper mapper)
-        {
+        private readonly IHubContext<APIHub> _hubContext;
+        public PostService(IPostRepository postRepository,
+            ICommentRepository commentRepository,
+            IUserService userService,
+            IMapper mapper,
+            IRelationshipRepository relationshipRepository,
+            IHubContext<APIHub> hubContext
+        ) {
             _postRepository = postRepository;
             _commentRepository = commentRepository;
             _mapper = mapper;
             _userService = userService;
+            _relationshipRepository = relationshipRepository;
+            _hubContext = hubContext;
         }
         public async Task<HttpResponse<List<PostReadDto>>> GetFeedPosts(int page, int amount)
         {
@@ -102,6 +113,17 @@ namespace API.Services.PostService
                     Messages = new string[] { e.Message }
                 };
             }
-        } 
+        }
+        public async Task<List<string>> GetConnectionIdsOfUsersThatCanSeeThePost(int postId) {
+            string posterId = await _postRepository.GetPostUserId(postId);
+            List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationships(posterId);
+            List<string> usersToReceiveNotification = new List<string> { posterId };
+            relationships.ForEach(relationship => {
+                usersToReceiveNotification.Add(relationship.User1Id != posterId ? relationship.User1Id : relationship.User2Id);
+            });
+            List<string> connectionIds = APIHub.GetConnectionIdsFromUserIds(usersToReceiveNotification);
+
+            return connectionIds;
+        }
     }
 }

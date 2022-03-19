@@ -5,16 +5,19 @@ import {
   HttpTransportType,
   withCallbacks,
 } from 'redux-signalr'
+import { Dispatch } from 'redux'
 
 import {
   addRoomMessage,
   getUnseenInvitationsCount,
   incrementNumberOfUnseenMessages,
 } from 'store/relationships/actions'
+import { removePostReaction, addPostReaction } from 'store/post/actions'
 
 import { IMessage } from 'types/interfaces/IMessage'
 import { IState } from 'store'
 import { IRelationship } from 'types/interfaces/IRelationship'
+import { IReaction } from 'types/interfaces/IReaction'
 
 export const signal = signalMiddleware({
   connection: new HubConnectionBuilder()
@@ -48,7 +51,34 @@ export const signal = signalMiddleware({
           }
         }
       }
-    }),
+    })
+    .add(
+      'ReceiveReactionToPostInFeed',
+      (message: { postId: number; reaction: IReaction }) => (dispatch: Dispatch, getState: () => IState) => {
+        console.log('-----------------Reaction to post message received-----------------', message)
+        // check if post exists in store:
+        const post = getState().posts.feedPosts.find((p) => p.post.id === message.postId)
+        const reaction = post?.post.reactions.find((r) => r.id === message.reaction.id)
+
+        if (post) {
+          if (reaction) dispatch(removePostReaction(message.postId, message.reaction.id))
+
+          dispatch(addPostReaction(message.postId, message.reaction))
+        }
+      }
+    )
+    .add(
+      'ReceiveDeleteReactionToPostInFeed',
+      (message: { postId: number; reactionId: number }) => (dispatch: Dispatch, getState: () => IState) => {
+        console.log('-----------------Deleted Reaction message received-----------------', message)
+        // check if post exists in store:
+        const post = getState().posts.feedPosts.find((p) => p.post.id === message.postId)
+
+        if (post) {
+          dispatch(removePostReaction(message.postId, message.reactionId))
+        }
+      }
+    ),
 })
 
 export default signal

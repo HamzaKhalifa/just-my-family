@@ -11,6 +11,7 @@ import {
   ADD_LOADED_POST_COMMENTS,
   SET_POST_REACT_LOADING,
   ADD_POST_REACTION,
+  REMOVE_POST_REACTION,
 } from './actionTypes'
 
 import { IState } from 'store'
@@ -56,6 +57,11 @@ export const setPostReactLoading = (postId: number, loading: boolean) => ({
 export const addPostReaction = (postId: number, reaction: IReaction) => ({
   type: ADD_POST_REACTION,
   payload: { postId, reaction },
+})
+
+export const removePostReaction = (postId: number, reactionId: number) => ({
+  type: REMOVE_POST_REACTION,
+  payload: { postId, reactionId },
 })
 
 export const getFeedPosts =
@@ -194,12 +200,20 @@ export const reactToPost =
 
     if ((!postId && postId !== 0) || !parsedToken) return
 
+    // check if the user's current reaction to the post is the same as the selected one
+    const reaction: IReaction | undefined = getState()
+      .posts.feedPosts.find((p) => p.post.id === postId)
+      ?.post.reactions.find((r) => r.userId === parsedToken.nameid && r.type === type)
+
+    const method = reaction ? 'DELETE' : 'POST'
+    const url = reaction ? '/reaction/deleteReactionToPost' : '/reaction/reactToPost'
+
     dispatch(setPostReactLoading(postId, true))
 
     axios
       .request({
-        method: 'POST',
-        url: process.env.REACT_APP_API + '/reaction/reactToPost',
+        method,
+        url: process.env.REACT_APP_API + url,
         headers: {
           Authorization: 'Bearer ' + token,
         },
@@ -210,7 +224,8 @@ export const reactToPost =
         },
       })
       .then((response: IHttpResponse<IReaction>) => {
-        dispatch(addPostReaction(postId, response.data.data))
+        if (reaction) dispatch(removePostReaction(postId, reaction.id))
+        else dispatch(addPostReaction(postId, response.data.data))
       })
       .catch((e) => {})
       .finally(() => dispatch(setPostReactLoading(postId, false)))

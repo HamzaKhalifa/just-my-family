@@ -12,6 +12,7 @@ namespace API.Services.RelationshipService
         Task<HttpResponse<RelationshipReadDto>> GetRelationship(int id);
         Task<HttpResponse<List<RelationshipReadDto>>> GetRelationships();
         Task<HttpResponse<List<RelationshipReadDto>>> GetApprovedRelationships();
+        Task<HttpResponse<List<RelationshipReadDto>>> GetUserApprovedRelationships(string userId);
         Task<HttpResponse<int>> GetUnseenInvitationsCount();
         Task<HttpResponse<RelationshipReadDto>> CreateRelationship(CreateRelationshipCommand relationshipCommand);
         Task<HttpResponse<RelationshipReadDto>> ApproveRelationship(int id);

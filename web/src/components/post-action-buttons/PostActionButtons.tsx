@@ -34,38 +34,59 @@ const PostActionButtons = (props: IPostActionButtons) => {
 
   return (
     <div className={styles.postActionButtonsContainer}>
-      {props.post.reactLoading && <Loader style={{ height: '100%' }} />}
-      {!props.post.reactLoading && (
-        <>
-          <Button
-            onClick={() => handleReact(ReactionEnum.Love)}
-            style={buttonStyle}
-            text=""
-            PrefixIcon={FcLike}
-            filled={userReaction?.type === ReactionEnum.Love}
-          />
-          <Button
-            onClick={() => handleReact(ReactionEnum.Party)}
-            style={buttonStyle}
-            text=""
-            PrefixIcon={GiPartyPopper}
-            filled={userReaction?.type === ReactionEnum.Party}
-          />
-          <Button
-            onClick={() => handleReact(ReactionEnum.Laugh)}
-            style={buttonStyle}
-            text=""
-            PrefixIcon={FaLaughSquint}
-            filled={userReaction?.type === ReactionEnum.Laugh}
-          />
-          <Button
-            onClick={() => handleReact(ReactionEnum.Wink)}
-            style={buttonStyle}
-            text=""
-            PrefixIcon={FaLaughWink}
-            filled={userReaction?.type === ReactionEnum.Wink}
-          />
-        </>
+      <div className={styles.buttonContainer}>
+        <Button
+          onClick={() => handleReact(ReactionEnum.Love)}
+          style={buttonStyle}
+          text=""
+          PrefixIcon={FcLike}
+          filled={userReaction?.type === ReactionEnum.Love}
+        />
+        <span className={styles.numberOfReactions}>
+          {props.post.post.reactions.filter((r) => r.type === ReactionEnum.Love).length}
+        </span>
+      </div>
+      <div className={styles.buttonContainer}>
+        <Button
+          onClick={() => handleReact(ReactionEnum.Party)}
+          style={buttonStyle}
+          text=""
+          PrefixIcon={GiPartyPopper}
+          filled={userReaction?.type === ReactionEnum.Party}
+        />
+        <span className={styles.numberOfReactions}>
+          {props.post.post.reactions.filter((r) => r.type === ReactionEnum.Party).length}
+        </span>
+      </div>
+      <div className={styles.buttonContainer}>
+        <Button
+          onClick={() => handleReact(ReactionEnum.Laugh)}
+          style={buttonStyle}
+          text=""
+          PrefixIcon={FaLaughSquint}
+          filled={userReaction?.type === ReactionEnum.Laugh}
+        />
+        <span className={styles.numberOfReactions}>
+          {props.post.post.reactions.filter((r) => r.type === ReactionEnum.Laugh).length}
+        </span>
+      </div>
+      <div className={styles.buttonContainer}>
+        <Button
+          onClick={() => handleReact(ReactionEnum.Wink)}
+          style={buttonStyle}
+          text=""
+          PrefixIcon={FaLaughWink}
+          filled={userReaction?.type === ReactionEnum.Wink}
+        />
+        <span className={styles.numberOfReactions}>
+          {props.post.post.reactions.filter((r) => r.type === ReactionEnum.Wink).length}
+        </span>
+      </div>
+
+      {props.post.reactLoading && (
+        <div className={styles.loadingLayer}>
+          <Loader />
+        </div>
       )}
     </div>
   )

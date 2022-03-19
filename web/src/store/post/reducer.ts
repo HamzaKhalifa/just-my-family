@@ -9,6 +9,7 @@ import {
   ADD_LOADED_POST_COMMENTS,
   SET_POST_REACT_LOADING,
   ADD_POST_REACTION,
+  REMOVE_POST_REACTION,
 } from './actionTypes'
 
 import initialState, { IPostsState, IPostState } from './initialState'
@@ -119,6 +120,26 @@ const addPostReaction = (state: IPostsState, action: IAction<{ postId: number; r
   }
 }
 
+const removePostReaction = (
+  state: IPostsState,
+  action: IAction<{ postId: number; reactionId: number }>
+): IPostsState => {
+  return {
+    ...state,
+    feedPosts: state.feedPosts.map((post) => {
+      if (post.post.id === action.payload.postId) {
+        return {
+          ...post,
+          post: {
+            ...post.post,
+            reactions: post.post.reactions.filter((reaction) => reaction.id !== action.payload.reactionId),
+          },
+        }
+      } else return post
+    }),
+  }
+}
+
 const actionHandler: any = {
   [SET_FEED_POSTS]: setFeedPosts,
   [ADD_FEED_POST]: addFeedPost,
@@ -127,6 +148,7 @@ const actionHandler: any = {
   [ADD_LOADED_POST_COMMENTS]: addLoadedPostComments,
   [SET_POST_REACT_LOADING]: setPostReactLoading,
   [ADD_POST_REACTION]: addPostReaction,
+  [REMOVE_POST_REACTION]: removePostReaction,
 }
 
 const reducer = (state: IPostsState = initialState, action: IAction<any>) => {

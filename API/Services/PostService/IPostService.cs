@@ -12,5 +12,6 @@ namespace API.Services.PostService
         Task<HttpResponse<List<PostReadDto>>> GetFeedPosts(int page, int amount);
         Task<HttpResponse<List<PostReadDto>>> GetUserPosts(GetPostsCommand command);
         Task<HttpResponse<PostReadDto>> CreatePost(CreatePostCommand command);
+        Task<List<string>> GetConnectionIdsOfUsersThatCanSeeThePost(int postId);
     }
 }

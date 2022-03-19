@@ -381,9 +381,10 @@ namespace API.Migrations
                 name: "Reactions",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     PostId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
                     CommentId1 = table.Column<int>(type: "int", nullable: true),
                     CommentId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false),
@@ -392,13 +393,13 @@ namespace API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reactions", x => new { x.UserId, x.PostId });
+                    table.PrimaryKey("PK_Reactions", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Reactions_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Reactions_Comments_CommentId1",
                         column: x => x.CommentId1,
@@ -440,17 +441,17 @@ namespace API.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "a4330ad1-2a1f-4160-bb91-60f64bea9af0", "77b22464-9fed-4826-8748-32e58b340118", "SuperAdmin", "SUPERADMIN" });
+                values: new object[] { "348c9a1c-abae-4483-9485-c9cd800ecd6c", "878316ab-dc41-4d8a-b875-79b782398653", "SuperAdmin", "SUPERADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "62a1ba76-71ab-4c21-97fd-71e0c8164407", "ce355819-a8c2-49c2-9e2d-bdf54609814f", "Admin", "ADMIN" });
+                values: new object[] { "a6a531f7-88ba-41e4-8828-29dcfb872089", "81da61ab-dca0-403b-8170-80a062db83de", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ce8f64a4-08c4-43c7-985b-01c69a071997", "508b24f5-3bc4-490c-aa23-c6134a5d0604", "Member", "MEMBER" });
+                values: new object[] { "452f290c-997b-488e-b66f-59715515e88f", "c9a78445-7e21-413d-a151-5ddcfc58e82a", "Member", "MEMBER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -540,6 +541,11 @@ namespace API.Migrations
                 name: "IX_Reactions_PostId",
                 table: "Reactions",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reactions_UserId",
+                table: "Reactions",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Room_SenderUserId",

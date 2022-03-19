@@ -66,9 +66,12 @@ namespace API.Services.RelationshipService
             }
         }
         public async Task<HttpResponse<List<RelationshipReadDto>>> GetApprovedRelationships() {
+            string requesterId = _userService.GetRequester();
+            return await GetUserApprovedRelationships(requesterId);
+        }
+        public async Task<HttpResponse<List<RelationshipReadDto>>> GetUserApprovedRelationships(string userId) {
             try {
-                string requesterId = _userService.GetRequester();
-                List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationships(requesterId);
+                List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationships(userId);
                 List<RelationshipReadDto> approvedRelationshipsReadDto = new List<RelationshipReadDto>();
                 
                 relationships.ForEach(async r => {

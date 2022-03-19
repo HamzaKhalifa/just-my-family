@@ -8,5 +8,6 @@ namespace API.Services.ReactionService
     public interface IReactionService
     {
         Task<HttpResponse<ReactionReadDto>> ReactToPost(ReactCommand command);
+        Task<HttpResponse<int>> DeleteReactionToPost(ReactCommand command);
     }
 }

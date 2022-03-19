@@ -186,11 +186,10 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Reaction", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CommentId")
                         .HasColumnType("nvarchar(max)");
@@ -201,7 +200,7 @@ namespace API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -210,11 +209,16 @@ namespace API.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("UserId", "PostId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CommentId1");
 
                     b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reactions");
                 });
@@ -399,22 +403,22 @@ namespace API.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a4330ad1-2a1f-4160-bb91-60f64bea9af0",
-                            ConcurrencyStamp = "77b22464-9fed-4826-8748-32e58b340118",
+                            Id = "348c9a1c-abae-4483-9485-c9cd800ecd6c",
+                            ConcurrencyStamp = "878316ab-dc41-4d8a-b875-79b782398653",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "62a1ba76-71ab-4c21-97fd-71e0c8164407",
-                            ConcurrencyStamp = "ce355819-a8c2-49c2-9e2d-bdf54609814f",
+                            Id = "a6a531f7-88ba-41e4-8828-29dcfb872089",
+                            ConcurrencyStamp = "81da61ab-dca0-403b-8170-80a062db83de",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ce8f64a4-08c4-43c7-985b-01c69a071997",
-                            ConcurrencyStamp = "508b24f5-3bc4-490c-aa23-c6134a5d0604",
+                            Id = "452f290c-997b-488e-b66f-59715515e88f",
+                            ConcurrencyStamp = "c9a78445-7e21-413d-a151-5ddcfc58e82a",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
@@ -642,9 +646,7 @@ namespace API.Migrations
 
                     b.HasOne("API.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Comment");
 
