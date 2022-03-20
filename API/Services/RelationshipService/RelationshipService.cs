@@ -74,10 +74,10 @@ namespace API.Services.RelationshipService
                 List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationships(userId);
                 List<RelationshipReadDto> approvedRelationshipsReadDto = new List<RelationshipReadDto>();
                 
-                relationships.ForEach(async r => {
+                relationships.ForEach(r => {
                     RelationshipReadDto newRelationshipReadDto = _mapper.Map<RelationshipReadDto>(r);
-                    newRelationshipReadDto.NumberOfUnseenMessages = await GetRelationshipNumberOfUnseenMessages(r);
-                    newRelationshipReadDto.TotalMessages = await GetRelationshipTotalMessages(r);
+                    newRelationshipReadDto.NumberOfUnseenMessages = GetRelationshipTotalUnseenMessages(r);
+                    newRelationshipReadDto.TotalMessages = GetRelationshipTotalMessages(r);
 
                     approvedRelationshipsReadDto.Add(newRelationshipReadDto);
                 });
@@ -93,10 +93,10 @@ namespace API.Services.RelationshipService
                 throw; 
             }
         }
-        public async Task<HttpResponse<int>> GetUnseenInvitationsCount() {
+        public async Task<HttpResponse<int>> GetTotalUnseenInvitations() {
             try {
                 string requesterId = _userService.GetRequester();
-                int count = await _relationshipRepository.GetUnseenInvitationsCount(requesterId);
+                int count = await _relationshipRepository.GetTotalUnseenInvitations(requesterId);
 
                 return new HttpResponse<int> {
                     Data = count,
@@ -198,21 +198,21 @@ namespace API.Services.RelationshipService
             }
         }
 
-        public async Task<int> GetRelationshipNumberOfUnseenMessages(Relationship relationship)
+        public int GetRelationshipTotalUnseenMessages(Relationship relationship)
         {
             if (relationship == null) return 0;
 
             string requester = _userService.GetRequester();
             
-            return await _messageService.GetChatRoomNumberOfUnseenMessages(relationship.Id);
+            return _messageService.GetChatRoomTotalUnseenMessages(relationship.Id);
         }
-        public async Task<int> GetRelationshipTotalMessages(Relationship relationship)
+        public int GetRelationshipTotalMessages(Relationship relationship)
         {
             if (relationship == null) return 0;
 
             string requester = _userService.GetRequester();
             
-            return await _messageService.GetChatRoomTotalMessages(relationship.Id);
+            return _messageService.GetChatRoomTotalMessages(relationship.Id);
         }
         
         public async Task<HttpResponse<int>> SetRelationshipInvitationSeen(SetRelationshipInvitationSeenCommand command) {

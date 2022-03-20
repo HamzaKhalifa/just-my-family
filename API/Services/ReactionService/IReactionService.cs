@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Dtos.Commands.ReactionCommands;
 using API.Dtos.ReadDtos;
@@ -9,5 +10,8 @@ namespace API.Services.ReactionService
     {
         Task<HttpResponse<ReactionReadDto>> ReactToPost(ReactCommand command);
         Task<HttpResponse<int>> DeleteReactionToPost(ReactCommand command);
+        Task<HttpResponse<int>> GetTotalUnseenReactions();
+        Task<HttpResponse<List<ReactionReadDto>>> GetPostsReactions(int amountAlreadyLoaded, int amount);
+        Task<HttpResponse<int>> SetReactionsToSeen(List<int> reactionsIds);
     }
 }

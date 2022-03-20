@@ -11,4 +11,6 @@ export interface IReaction {
   comment: number
   commentId: number
   type: ReactionEnum
+  submittedAt: string
+  seen: boolean
 }

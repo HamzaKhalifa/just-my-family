@@ -11,12 +11,16 @@ import { useLocation } from 'react-router-dom'
 
 import useStyles from './styles'
 import { IState } from 'store'
+import { IReactionNotification } from 'store/notifications/initialState'
 
 interface ILeftMenu {}
 
 const LeftMenu = (props: ILeftMenu) => {
   const unseenInvitationsCount: number = useSelector<IState, number>(
     (state) => state.relationships.unseenInvitationsCount
+  )
+  const totalUnseenReactions: number = useSelector<IState, number>(
+    (state) => state.notifications.totalUnseenReactions
   )
 
   const styles = useStyles()
@@ -36,6 +40,9 @@ const LeftMenu = (props: ILeftMenu) => {
           styles[location.pathname === '/dashboard/notifications' ? 'selectedMenuButton' : 'menuButton']
         }
       >
+        <div className={styles.notificationContainer}>
+          <Notification number={totalUnseenReactions} />
+        </div>
         <RiNotification3Fill size={30} color="white" />
       </Link>
       <Link

@@ -15,13 +15,12 @@ namespace API.Repositories.MessageRepository
         {
             _dataContext = dataContext;
         }
-        public async Task<int> GetChatRoomNumberOfUnseenMessages(int roomId, string requesterId) {
-            return await _dataContext.Messages.Include(m => m.SeenByUsersMessages)
-                .CountAsync(m => m.RoomId == roomId && !m.SeenByUsersMessages.Any(seenByUserMessage => seenByUserMessage.UserId == requesterId) && m.SenderId != requesterId);
+        public int GetChatRoomTotalUnseenMessages(int roomId, string requesterId) {
+            return _dataContext.Messages.Include(m => m.SeenByUsersMessages)
+                .Count(m => m.RoomId == roomId && !m.SeenByUsersMessages.Any(seenByUserMessage => seenByUserMessage.UserId == requesterId) && m.SenderId != requesterId);
         }
-        
-        public async Task<int> GetChatRoomTotalMessages(int roomId) {
-            return await _dataContext.Messages.CountAsync(m => m.RoomId == roomId);
+        public int GetChatRoomTotalMessages(int roomId) {
+            return _dataContext.Messages.Count(m => m.RoomId == roomId);
         }
         public async Task<Message> SendMessage(Message message)
         {
@@ -44,7 +43,7 @@ namespace API.Repositories.MessageRepository
             return await _dataContext.SaveChangesAsync();
         }
         public async Task<List<Message>> LoadMoreMessages(int roomId, int amountAlreadyLoaded, int amountToLoad) {
-            int totalMessages = await GetChatRoomTotalMessages(roomId);
+            int totalMessages = GetChatRoomTotalMessages(roomId);
 
             amountToLoad = Math.Min(amountToLoad, totalMessages - amountAlreadyLoaded);
             return await _dataContext.Messages.Where(m => m.RoomId == roomId)

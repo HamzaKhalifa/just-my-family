@@ -61,9 +61,8 @@ namespace API.Repositories.Post
             await _context.SaveChangesAsync();
             return _context.Posts.Include(post => post.User).FirstOrDefault(p => p.Id == post.Id);
         }
-        public async Task<string> GetPostUserId(int postId) {
+        public async Task<string> GetPostPosterId(int postId) {
             API.Models.Post post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
-
             return post.UserId;
         }
     }

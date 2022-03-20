@@ -52,9 +52,9 @@ namespace API.Controllers
             }
         }
         
-        [HttpGet("getUnseenInvitationsCount")]
-        public async Task<ActionResult<int>> GetUnseenInvitationsCount() {
-            HttpResponse<int> response = await _relationshipService.GetUnseenInvitationsCount();
+        [HttpGet("GetTotalUnseenInvitations")]
+        public async Task<ActionResult<int>> GetTotalUnseenInvitations() {
+            HttpResponse<int> response = await _relationshipService.GetTotalUnseenInvitations();
 
             switch (response.ResponseType) {
                 case ServiceResponse.Ok: return Ok(response);

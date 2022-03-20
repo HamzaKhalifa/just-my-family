@@ -26,7 +26,7 @@ const PostActionButtons = (props: IPostActionButtons) => {
   const dispatch = useDispatch()
 
   const handleReact = (type: ReactionEnum) => {
-    dispatch(reactToPost(props.post.post.id, type))
+    dispatch(reactToPost(props.post.post, type))
   }
 
   const userReaction = props.post.post.reactions.find((r) => r.userId === parsedToken?.nameid)

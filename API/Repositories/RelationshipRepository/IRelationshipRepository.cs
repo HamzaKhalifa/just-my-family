@@ -11,7 +11,8 @@ namespace API.Repositories.RelationshipRepository
         Task<Relationship> GetUsersRelationship(string user1Id, string user2Id);
         Task<List<Relationship>> GetRelationships(string userId);
         Task<List<Relationship>> GetApprovedRelationships(string userId);
-        Task<int> GetUnseenInvitationsCount(string userId);
+        Task<List<Relationship>> GetApprovedRelationshipsMinimally(string userId);
+        Task<int> GetTotalUnseenInvitations(string userId);
         Task<Relationship> CreateRelationship(CreateRelationshipCommand relationshipCommand);
         Task<Relationship> UpdateRelationship(Relationship relationship);
         Task<int> DeleteRelationship(int id);

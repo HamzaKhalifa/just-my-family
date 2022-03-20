@@ -43,7 +43,15 @@ namespace API.Repositories.RelationshipRepository
 
             return relationships;
         }
-        public async Task<int> GetUnseenInvitationsCount(string userId) {
+        // Get approved relationships without additional Linq includes
+        public async Task<List<Relationship>> GetApprovedRelationshipsMinimally(string userId) {
+            List<Relationship> relationships = await _dataContext.Relationships
+                .Where(r => ((r.User1Id == userId || r.User2Id == userId) && r.Approved))
+                .ToListAsync();
+
+            return relationships;
+        }
+        public async Task<int> GetTotalUnseenInvitations(string userId) {
             return await _dataContext.Relationships
                 .Where(r => (
                     (r.User1Id == userId || r.User2Id == userId) && 
@@ -98,7 +106,7 @@ namespace API.Repositories.RelationshipRepository
 
                 await _dataContext.SaveChangesAsync();
 
-                return await GetUnseenInvitationsCount(userId);
+                return await GetTotalUnseenInvitations(userId);
             } catch(Exception e) {
                 Console.WriteLine(e.ToString());
                 throw;

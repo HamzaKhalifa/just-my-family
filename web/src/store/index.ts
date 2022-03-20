@@ -8,6 +8,7 @@ import authReducer from './auth/reducer'
 import relationshipsReducer from './relationships/reducer'
 import profileReducer from './profile/reducer'
 import postsReducer from './post/reducer'
+import notificationsReducer from './notifications/reducer'
 
 import signal from 'store/middlewares/signalRMiddleware'
 
@@ -15,12 +16,14 @@ import { IAuthState } from './auth/initialState'
 import { IRelationshipsState } from './relationships/initialState'
 import { IProfileState } from './profile/initialState'
 import { IPostsState } from './post/initialState'
+import { INotificationsState } from './notifications/initialState'
 
 export interface IState {
   auth: IAuthState
   profile: IProfileState
   relationships: IRelationshipsState
   posts: IPostsState
+  notifications: INotificationsState
 }
 
 export interface IAction<Payload> {
@@ -33,13 +36,14 @@ const reducer = combineReducers<IState>({
   profile: profileReducer,
   relationships: relationshipsReducer,
   posts: postsReducer,
+  notifications: notificationsReducer,
 })
 
 const persistedReducer = persistReducer(
   {
     key: 'root',
     storage,
-    blacklist: ['relationships', 'profile', 'posts'],
+    blacklist: ['relationships', 'profile', 'posts', 'notifications'],
     transforms: [
       // Token expires after 6 and a half days (By convention with the backend which is set to 7 days)
       expireReducer('auth', {

@@ -115,8 +115,9 @@ namespace API.Services.PostService
             }
         }
         public async Task<List<string>> GetConnectionIdsOfUsersThatCanSeeThePost(int postId) {
-            string posterId = await _postRepository.GetPostUserId(postId);
-            List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationships(posterId);
+            string posterId = await _postRepository.GetPostPosterId(postId);
+            
+            List<Relationship> relationships = await _relationshipRepository.GetApprovedRelationshipsMinimally(posterId);
             List<string> usersToReceiveNotification = new List<string> { posterId };
             relationships.ForEach(relationship => {
                 usersToReceiveNotification.Add(relationship.User1Id != posterId ? relationship.User1Id : relationship.User2Id);

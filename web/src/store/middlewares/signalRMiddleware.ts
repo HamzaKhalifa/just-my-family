@@ -9,32 +9,36 @@ import { Dispatch } from 'redux'
 
 import {
   addRoomMessage,
-  getUnseenInvitationsCount,
+  getTotalUnseenInvitations,
   incrementNumberOfUnseenMessages,
 } from 'store/relationships/actions'
 import { removePostReaction, addPostReaction } from 'store/post/actions'
+import { addPostReactionNotification } from 'store/notifications/actions'
 
 import { IMessage } from 'types/interfaces/IMessage'
 import { IState } from 'store'
 import { IRelationship } from 'types/interfaces/IRelationship'
 import { IReaction } from 'types/interfaces/IReaction'
 
+export const connection = new HubConnectionBuilder()
+  .configureLogging(LogLevel.Debug)
+  .withUrl(process.env.REACT_APP_HUBS_URL + '', {
+    skipNegotiation: true,
+    transport: HttpTransportType.WebSockets,
+    accessTokenFactory: () => {
+      const token = JSON.parse(JSON.parse(localStorage.getItem('persist:root') || '')?.auth)?.token || ''
+      return token
+    },
+  })
+  .build()
+
 export const signal = signalMiddleware({
-  connection: new HubConnectionBuilder()
-    .configureLogging(LogLevel.Debug)
-    .withUrl(process.env.REACT_APP_HUBS_URL + '', {
-      skipNegotiation: true,
-      transport: HttpTransportType.WebSockets,
-      accessTokenFactory: () => {
-        const token = JSON.parse(JSON.parse(localStorage.getItem('persist:root') || '')?.auth)?.token || ''
-        return token
-      },
-    })
-    .build(),
+  connection,
+  shouldConnectionStartImmediately: false,
   callbacks: withCallbacks()
     .add('ReceiveRelationshipNotification', (relationship: IRelationship) => (dispatch) => {
       console.log('-----------------Invitation received-----------------', relationship)
-      dispatch(getUnseenInvitationsCount())
+      dispatch(getTotalUnseenInvitations())
     })
     .add('ReceiveChatMessage', (message: IMessage) => (dispatch, getState: () => IState) => {
       console.log('-----------------Chat message received-----------------', message)
@@ -54,23 +58,35 @@ export const signal = signalMiddleware({
     })
     .add(
       'ReceiveReactionToPostInFeed',
-      (message: { postId: number; reaction: IReaction }) => (dispatch: Dispatch, getState: () => IState) => {
-        console.log('-----------------Reaction to post message received-----------------', message)
-        // check if post exists in store:
-        const post = getState().posts.feedPosts.find((p) => p.post.id === message.postId)
-        const reaction = post?.post.reactions.find((r) => r.id === message.reaction.id)
+      (message: { posterId: string; postId: number; reaction: IReaction }) =>
+        (dispatch: Dispatch, getState: () => IState) => {
+          console.log('-----------------Reaction to post message received-----------------', message)
+          const state: IState = getState()
 
-        if (post) {
-          if (reaction) dispatch(removePostReaction(message.postId, message.reaction.id))
+          // If the poster is the current user, and the reacting user isn't the same user as the current user (a user reacting to his own post) then we add a reaction notification
+          if (
+            message.posterId === state.auth.parsedToken?.nameid &&
+            message.reaction.userId !== state.auth.parsedToken?.nameid
+          ) {
+            dispatch(addPostReactionNotification(message.reaction))
+          }
 
-          dispatch(addPostReaction(message.postId, message.reaction))
+          // check if post exists in store:
+          const post = state.posts.feedPosts.find((p) => p.post.id === message.postId)
+          const reaction = post?.post.reactions.find((r) => r.id === message.reaction.id)
+
+          if (post) {
+            if (reaction) dispatch(removePostReaction(message.postId, message.reaction.id))
+
+            dispatch(addPostReaction(message.postId, message.reaction))
+          }
         }
-      }
     )
     .add(
       'ReceiveDeleteReactionToPostInFeed',
       (message: { postId: number; reactionId: number }) => (dispatch: Dispatch, getState: () => IState) => {
         console.log('-----------------Deleted Reaction message received-----------------', message)
+
         // check if post exists in store:
         const post = getState().posts.feedPosts.find((p) => p.post.id === message.postId)
 

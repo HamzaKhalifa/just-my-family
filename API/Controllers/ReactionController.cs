@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Dtos.Commands.ReactionCommands;
 using API.Dtos.ReadDtos;
@@ -35,6 +36,33 @@ namespace API.Controllers
             switch(response.ResponseType) {
                 case ServiceResponse.Created: return StatusCode(201, response);
                 default: return NotFound(response);
+            }
+        }
+        [HttpGet("getTotalUnseenReactions")]
+        public async Task<ActionResult<HttpResponse<int>>> GetTotalUnseenReactions() {
+            HttpResponse<int> response = await _reactionService.GetTotalUnseenReactions();
+
+            switch(response.ResponseType) {
+                case ServiceResponse.Created: return StatusCode(201, response);
+                default: return NotFound(response);
+            }
+        }
+        [HttpGet("getPostsReactions/{amountAlreadyLoaded}/{amount}")]
+        public async Task<ActionResult<HttpResponse<List<ReactionReadDto>>>> GetPostReactions(int amountAlreadyLoaded, int amount) {
+            HttpResponse<List<ReactionReadDto>> response = await _reactionService.GetPostsReactions(amountAlreadyLoaded, amount);
+
+            switch(response.ResponseType) {
+                case ServiceResponse.Created: return StatusCode(201, response);
+                default: return NotFound(response);
+            }
+        }
+        [HttpPost("setReactionsToSeen")]
+        public async Task<ActionResult<HttpResponse<int>>> SetReactionsToSeen(SetReactionsToSeenCommand command) {
+            HttpResponse<int> response = await _reactionService.SetReactionsToSeen(command.ReactionsIds);
+
+            switch(response.ResponseType) {
+                case ServiceResponse.Ok: return Ok(response);
+                default: return Conflict(response);
             }
         }
     }

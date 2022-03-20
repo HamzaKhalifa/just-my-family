@@ -13,7 +13,7 @@ export interface ITheme {
 
 const theme: ITheme = {
   textColor1: '#000',
-  textColor2: '#000',
+  textColor2: '#5f3d3d',
   primaryColor: '#510fec',
   secondaryColor: '#502e9d',
   frontColor: '#fff',

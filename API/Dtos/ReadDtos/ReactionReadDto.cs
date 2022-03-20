@@ -13,5 +13,7 @@ namespace API.Dtos.ReadDtos
         public Comment Comment { get; set; }
         public string CommentId { get; set; }
         public ReactionEnum Type { get; set; }
+        public string SubmittedAt { get; set; }
+        public bool Seen { get; set; }
     }
 }

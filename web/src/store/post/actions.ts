@@ -194,21 +194,23 @@ export const loadMoreComments =
   }
 
 export const reactToPost =
-  (postId: number | undefined, type: ReactionEnum) => (dispatch: Dispatch, getState: () => IState) => {
+  (post: IPost, type: ReactionEnum) => (dispatch: Dispatch, getState: () => IState) => {
     const token: string | undefined = getState().auth.token
     const parsedToken: IParsedToken | undefined = getState().auth.parsedToken
 
-    if ((!postId && postId !== 0) || !parsedToken) return
+    if (post?.userId === parsedToken?.nameid) return toast.error("You can't react to your own post.")
+
+    if ((!post?.id && post?.id !== 0) || !parsedToken) return
 
     // check if the user's current reaction to the post is the same as the selected one
     const reaction: IReaction | undefined = getState()
-      .posts.feedPosts.find((p) => p.post.id === postId)
+      .posts.feedPosts.find((p) => p.post.id === post?.id)
       ?.post.reactions.find((r) => r.userId === parsedToken.nameid && r.type === type)
 
     const method = reaction ? 'DELETE' : 'POST'
     const url = reaction ? '/reaction/deleteReactionToPost' : '/reaction/reactToPost'
 
-    dispatch(setPostReactLoading(postId, true))
+    dispatch(setPostReactLoading(post.id, true))
 
     axios
       .request({
@@ -218,15 +220,20 @@ export const reactToPost =
           Authorization: 'Bearer ' + token,
         },
         data: {
-          postId,
+          postId: post?.id,
           userId: parsedToken.nameid,
           type,
+          submittedAt: moment(Date.now()).format(process.env.REACT_APP_DATETIME_FORMAT).toString(),
         },
       })
       .then((response: IHttpResponse<IReaction>) => {
-        if (reaction) dispatch(removePostReaction(postId, reaction.id))
-        else dispatch(addPostReaction(postId, response.data.data))
+        if (post.id) {
+          if (reaction) dispatch(removePostReaction(post.id, reaction.id))
+          else dispatch(addPostReaction(post.id, response.data.data))
+        }
       })
       .catch((e) => {})
-      .finally(() => dispatch(setPostReactLoading(postId, false)))
+      .finally(() => {
+        if (post?.id) dispatch(setPostReactLoading(post?.id, false))
+      })
   }

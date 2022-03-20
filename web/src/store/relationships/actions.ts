@@ -57,7 +57,7 @@ export const setLoading = (loading: boolean, whichLoading: string) => ({
   payload: { loading, whichLoading },
 })
 
-export const getUnseenInvitationsCount = () => (dispatch: any, getState: () => IState) => {
+export const getTotalUnseenInvitations = () => (dispatch: any, getState: () => IState) => {
   const store: IState = getState()
   const token = store.auth.token
 
@@ -65,7 +65,7 @@ export const getUnseenInvitationsCount = () => (dispatch: any, getState: () => I
     axios
       .request({
         method: 'GET',
-        url: process.env.REACT_APP_API + '/relationship/getUnseenInvitationsCount',
+        url: process.env.REACT_APP_API + '/relationship/getTotalUnseenInvitations',
         headers: {
           Authorization: 'Bearer ' + token,
         },

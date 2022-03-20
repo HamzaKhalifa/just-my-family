@@ -6,8 +6,8 @@ namespace API.Repositories.MessageRepository
 {
     public interface IMessageRepository
     {
-        Task<int> GetChatRoomNumberOfUnseenMessages(int relationshipId, string requesterId);
-        Task<int> GetChatRoomTotalMessages(int relationshipId);
+        int GetChatRoomTotalUnseenMessages(int relationshipId, string requesterId);
+        int GetChatRoomTotalMessages(int relationshipId);
         Task<Message> SendMessage(Message message); 
         Task<int> AddRoomMessagesSeenBy(int roomId, string userId);
         Task<List<Message>> LoadMoreMessages(int roomId, int amountAlreadyLoaded, int amountToLoad);

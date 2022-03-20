@@ -26,13 +26,13 @@ namespace API.Services.MessageService
             _mapper = mapper;
             _hubContext = hubContext;
         }
-        public async Task<int> GetChatRoomNumberOfUnseenMessages(int roomId) {
+        public int GetChatRoomTotalUnseenMessages(int roomId) {
             string requesterId = _userService.GetRequester();
-            return await _messageRepository.GetChatRoomNumberOfUnseenMessages(roomId, requesterId);
+            return _messageRepository.GetChatRoomTotalUnseenMessages(roomId, requesterId);
         }
-        public async Task<int> GetChatRoomTotalMessages(int roomId) {
+        public int GetChatRoomTotalMessages(int roomId) {
             string requesterId = _userService.GetRequester();
-            return await _messageRepository.GetChatRoomTotalMessages(roomId);
+            return _messageRepository.GetChatRoomTotalMessages(roomId);
         }
         public async Task<HttpResponse<MessageReadDto>> SendMessage(SendMessageCommand sendMessageCommand)
         {
