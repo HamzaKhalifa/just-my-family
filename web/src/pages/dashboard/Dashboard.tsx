@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import Home from 'pages/home'
 import Chat from 'pages/chat'
+import Post from 'pages/post'
 import Relationships from 'pages/relationships'
 import Notifications from 'pages/notifications'
 import withLeftMenu from 'hoc/with-left-menu'
@@ -35,6 +36,7 @@ const Dashboard = () => {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/relationships" element={<Relationships key={Date.now()} />} />
+        <Route path="/posts/:id" element={<Post />} />
       </Routes>
     </div>
   )

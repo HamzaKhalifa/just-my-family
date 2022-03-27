@@ -21,7 +21,6 @@ import { createComment, loadMoreComments } from 'store/post/actions'
 import useStyles from './styles'
 import { IPostState } from 'store/post/initialState'
 import { ITheme } from 'theme'
-import { truncateSync } from 'fs'
 
 interface IPostCard {
   post: IPostState

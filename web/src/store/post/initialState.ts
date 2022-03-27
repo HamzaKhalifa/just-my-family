@@ -10,11 +10,13 @@ export interface IPostState {
 export interface IPostsState {
   feedPosts: IPostState[]
   submitLoading: boolean
+  currentPost?: IPostState
 }
 
 const initialState: IPostsState = {
   feedPosts: [],
   submitLoading: false,
+  currentPost: undefined,
 }
 
 export default initialState

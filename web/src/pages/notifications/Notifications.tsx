@@ -24,7 +24,7 @@ const Notifications = () => {
     <div className={styles.notificationsContainer}>
       {postReactionsNotifications.map((reactionNotification) => (
         <NotificationCard
-          to="/"
+          to={'/dashboard/posts/' + reactionNotification.reaction.postId}
           key={reactionNotification.reaction.id}
           profilePictureName={reactionNotification.reaction?.user?.profilePictureName}
           userFullName={
