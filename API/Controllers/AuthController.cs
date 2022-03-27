@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using API.Dtos.Commands.AuthCommands;
+using API.Dtos.ReadDtos;
 using API.HttpHelpers;
 using API.Models;
 using API.Services.AuthService;
@@ -18,8 +19,8 @@ namespace API.Controllers
         }
         
         [HttpPost("login")]
-        public async Task<ActionResult<HttpResponse<string>>> Login(LoginCommand command) {
-            HttpResponse<string> response = await _authService.Login(command);
+        public async Task<ActionResult<HttpResponse<LoginReadDto>>> Login(LoginCommand command) {
+            HttpResponse<LoginReadDto> response = await _authService.Login(command);
 
             switch(response.ResponseType) {
                 case ServiceResponse.Unauthorized: return Unauthorized(response);

@@ -13,5 +13,6 @@ namespace API.Services.UserService
         Task<HttpResponse<List<Dtos.ReadDtos.UserReadDto>>> SearchUsers(string searchText);
         Task<HttpResponse<Dtos.ReadDtos.UserReadDto>> ChangeProfilePicture(ChangeProfilePictureCommand command);
         Task<HttpResponse<string>> GetUserProfilePicture(string userId);
+        Task<HttpResponse<UserReadDto>> UpdateUser(UpdateUserProfileCommand command);
     }
 }

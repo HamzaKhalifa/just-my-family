@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using API.Services.EmailService;
+using API.Dtos.ReadDtos;
+using AutoMapper;
 
 namespace API.Services.AuthService
 {
@@ -21,12 +23,14 @@ namespace API.Services.AuthService
         private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
         private readonly IEmailService _emailService;
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration, UserManager<User> userManager, IEmailService emailService)
+        private readonly IMapper _mapper;
+        public AuthService(IAuthRepository authRepository, IConfiguration configuration, UserManager<User> userManager, IEmailService emailService, IMapper mapper)
         {
             _authRepository = authRepository;
             _configuration = configuration;
             _userManager = userManager;
             _emailService = emailService;
+            _mapper = mapper;
         }
 
         public string GenerateToken(User user) {
@@ -57,11 +61,11 @@ namespace API.Services.AuthService
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<HttpResponse<string>> Login(LoginCommand command)
+        public async Task<HttpResponse<LoginReadDto>> Login(LoginCommand command)
         {
             User user = await _authRepository.FindUserByEmail(command.Email);
 
-            if (user == null) return new HttpResponse<string> { 
+            if (user == null) return new HttpResponse<LoginReadDto> { 
                 Data = null, 
                 Success = false,
                 ResponseType = ServiceResponse.Unauthorized,
@@ -70,7 +74,7 @@ namespace API.Services.AuthService
             
             bool correctPassword = await _authRepository.CheckPassword(user, command.Password);
             if (!correctPassword) {
-                return new HttpResponse<string> { 
+                return new HttpResponse<LoginReadDto> { 
                     Data = null, 
                     Success = false,
                     ResponseType = ServiceResponse.WrongPasword,
@@ -80,8 +84,13 @@ namespace API.Services.AuthService
             
             string token = GenerateToken(user);
 
-            return new HttpResponse<string> { 
-                Data = token,
+            LoginReadDto loginReadDto = new LoginReadDto {
+                Token = token,
+                User = _mapper.Map<UserReadDto>(user)
+            };
+
+            return new HttpResponse<LoginReadDto> { 
+                Data = loginReadDto,
                 Success = true,
                 ResponseType = ServiceResponse.Success,
                 Messages = new string[] { ServiceResponse.Success },

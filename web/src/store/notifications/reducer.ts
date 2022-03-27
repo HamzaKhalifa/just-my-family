@@ -12,11 +12,11 @@ const addPostReactionNotification = (
   state: INotificationsState,
   action: IAction<IReaction>
 ): INotificationsState => {
-  const incrementTotalUnseenReactions: boolean = !Boolean(
+  const newReactor: boolean = !Boolean(
     state.postReactionsNotifications.find((r) => r.reaction.id === action.payload.id)
   )
   let newPostReactionsNotifications: IReactionNotification[] = [...state.postReactionsNotifications]
-  if (incrementTotalUnseenReactions) newPostReactionsNotifications.push({ reaction: action.payload })
+  if (newReactor) newPostReactionsNotifications.push({ reaction: action.payload })
   else
     newPostReactionsNotifications = newPostReactionsNotifications.map((rn) =>
       rn.reaction.id === action.payload.id ? { reaction: action.payload } : rn
@@ -24,7 +24,7 @@ const addPostReactionNotification = (
   return {
     ...state,
     postReactionsNotifications: newPostReactionsNotifications,
-    totalUnseenReactions: state.totalUnseenReactions + (incrementTotalUnseenReactions ? 1 : 0),
+    totalUnseenReactions: state.totalUnseenReactions + 1,
   }
 }
 

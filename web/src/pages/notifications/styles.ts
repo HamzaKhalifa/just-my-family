@@ -7,6 +7,7 @@ const useStyles = createUseStyles((theme: ITheme) => ({
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
+    height: 'fit-content',
   },
 }))
 

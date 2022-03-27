@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using API.Dtos.Commands.UserCommands;
+using API.Dtos.ReadDtos;
 using API.HttpHelpers;
 using API.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
@@ -51,6 +51,15 @@ namespace API.Controllers
                 case ServiceResponse.NotFound: return NotFound(response);
                 case ServiceResponse.Ok: return Ok(response);
                 default: return NotFound(response);
+            }
+        }
+        [HttpPut("update")]
+        public async Task<ActionResult<HttpResponse<UserReadDto>>> UpdateUserProfile(UpdateUserProfileCommand command) {
+            HttpResponse<UserReadDto> result = await _userService.UpdateUser(command);
+
+            switch(result.ResponseType) {
+                case ServiceResponse.Ok: return Ok(result);
+                default: return NotFound(result);
             }
         }
     }

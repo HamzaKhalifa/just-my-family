@@ -11,6 +11,7 @@ namespace API.Models
         public DateTime UpdatedAt { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int Age { get; set; }
         public string ProfilePictureName { get; set; }
         public GenderEnum Gender { get; set; }
         public List<SeenByUserMessage> SeenMessages { get; set; }

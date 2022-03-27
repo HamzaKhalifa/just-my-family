@@ -18,10 +18,12 @@ import { AiOutlineLogin } from 'react-icons/ai'
 import useStyles from './styles'
 
 import { setParsedToken, setToken } from 'store/auth/actions'
+import { setUser } from 'store/profile/actions'
 import { IHttpResponse } from 'types/interfaces/IHttpResponse'
 import parseToken from 'utils/parseToken'
 import { IErrorResponse } from 'types/interfaces/IErrorResponse'
 import { IParsedToken } from 'types/interfaces/IParsedToken'
+import { IUser } from 'types/interfaces/IUser'
 
 const Login = () => {
   const [loading, setLoading] = React.useState(false)
@@ -53,12 +55,13 @@ const Login = () => {
             password: values.password,
           },
         })
-        .then((response: IHttpResponse<string>) => {
+        .then((response: IHttpResponse<{ token: string; user: IUser }>) => {
           if (response.data.success) {
-            toast('Welcome back ' + parseToken(response.data.data).name + ' 👌')
-            dispatch(setToken(response.data.data))
-            const parsedToken: IParsedToken = parseToken(response.data.data)
+            toast('Welcome back ' + parseToken(response.data.data.token).name + ' 👌')
+            dispatch(setToken(response.data.data.token))
+            const parsedToken: IParsedToken = parseToken(response.data.data.token)
             dispatch(setParsedToken(parsedToken))
+            dispatch(setUser(response.data.data.user))
           }
         })
         .catch((error: IErrorResponse<any>) => {

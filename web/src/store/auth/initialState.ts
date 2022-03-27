@@ -1,4 +1,5 @@
 import { IParsedToken } from 'types/interfaces/IParsedToken'
+import { IUser } from 'types/interfaces/IUser'
 
 export interface IAuthState {
   token?: string

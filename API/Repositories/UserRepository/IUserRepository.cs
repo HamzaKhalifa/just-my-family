@@ -8,7 +8,6 @@ namespace API.Repositories.UserRepository
     {
         Task<User> GetUser(string id);
         Task<List<User>> SearchUsers(string searchText, string requesterId);
-
         Task<User> UpdateUser(User user);
     }
 }

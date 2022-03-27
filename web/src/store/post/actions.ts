@@ -154,7 +154,7 @@ export const createComment =
       })
       .then((response: IHttpResponse<IComment>) => {
         dispatch(addFeedPostComment(postId, response.data.data))
-        toast.info('Comemnt posted')
+        toast.success('👌')
         toast.update(toasterId, { isLoading: false, autoClose: 3000 })
       })
       .catch((error: IErrorResponse<IComment>) => {

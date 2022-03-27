@@ -96,7 +96,6 @@ namespace API.Services.UserService
                 };
             }
         }
-
         public async Task<HttpResponse<string>> GetUserProfilePicture(string userId)
         {
             Models.User user = await _userRepository.GetUser(userId);
@@ -113,6 +112,21 @@ namespace API.Services.UserService
                 Messages = new string[] { "User profile picture" },
                 ResponseType = ServiceResponse.Ok,
                 Success = false
+            };
+        }
+        public async Task<HttpResponse<UserReadDto>> UpdateUser(UpdateUserProfileCommand command) {
+            User user = await _userRepository.GetUser(command.Id);
+            user.FirstName = command.FirstName;
+            user.LastName = command.LastName;
+            user.Age = command.Age;
+
+            await _userRepository.UpdateUser(user);
+
+            return new HttpResponse<UserReadDto> {
+                Data = _mapper.Map<UserReadDto>(user),
+                Success = true,
+                Messages = new String[] { "User " + command.Id + " has been updated" },
+                ResponseType = ServiceResponse.Ok
             };
         }
     }

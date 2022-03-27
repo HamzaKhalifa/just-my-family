@@ -15,6 +15,21 @@ const useStyles = createUseStyles((theme: ITheme) => ({
     boxSizing: 'border-box',
     boxShadow: '0px 10px 40px ' + theme.shadowColor,
   },
+  firstNameAndLastNameContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '10px',
+  },
+  firstNameAndLastName: {
+    color: theme.textColor1,
+    fontSize: '15px',
+  },
+  editIcon: {
+    cursor: 'pointer',
+    color: theme.primaryColor,
+    marginLeft: '10px',
+    fontSize: '20px',
+  },
 }))
 
 export default useStyles
